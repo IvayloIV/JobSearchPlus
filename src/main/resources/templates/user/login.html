@@ -1,0 +1,18 @@
+<th:block xmlns:th="http://www.thymeleaf.org" th:fragment="register">
+    <h1 class="text-center text-dark">Login</h1>
+    <hr class="hr-2 bg-dark w-25">
+    <form class="form w-25 mx-auto" th:action="@{/user/login}" th:method="POST">
+        <div class="form-group">
+            <label for="facultyNumber" class="font-weight-bold" th:text="#{loginUser.facultyNumber}"></label>
+            <input type="text" class="form-control" id="facultyNumber" name="facultyNumber">
+        </div>
+        <div class="form-group">
+            <label for="password" class="font-weight-bold" th:text="#{loginUser.password}"></label>
+            <input type="password" class="form-control" id="password" name="password">
+        </div>
+        <hr class="hr-2 bg-dark">
+        <div class="button-holder d-flex justify-content-center">
+            <button type="submit" class="btn btn-dark" th:text="#{loginUser.login}"></button>
+        </div>
+    </form>
+</th:block>

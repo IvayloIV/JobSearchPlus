@@ -1,0 +1,116 @@
+<th:block xmlns:th="http://www.thymeleaf.org" th:fragment="register">
+    <h1 class="text-center text-dark">Register</h1>
+    <hr class="hr-2 bg-dark w-25">
+    <form class="form w-25 mx-auto" th:action="@{/user/register}" th:method="POST" th:object="${registerBindingModel}" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="facultyNumber" class="font-weight-bold" th:text="#{registerUser.facultyNumber}"></label>
+            <input type="text" class="form-control" id="facultyNumber" th:field="*{facultyNumber}">
+            <p class="text-danger"
+               th:if="${#fields.hasErrors('facultyNumber')}"
+               th:each="error : ${#fields.errors('facultyNumber')}"
+               th:text="${error}"></p>
+        </div>
+        <div class="form-group">
+            <label for="password" class="font-weight-bold" th:text="#{registerUser.password}"></label>
+            <input type="password" class="form-control" id="password" th:field="*{password}">
+            <p class="text-danger"
+               th:if="${#fields.hasErrors('password')}"
+               th:each="error : ${#fields.errors('password')}"
+               th:text="${error}"></p>
+        </div>
+        <div class="form-group">
+            <label for="name" class="font-weight-bold" th:text="#{registerUser.name}"></label>
+            <input type="text" class="form-control" id="name" th:field="*{name}">
+            <p class="text-danger"
+               th:if="${#fields.hasErrors('name')}"
+               th:each="error : ${#fields.errors('name')}"
+               th:text="${error}"></p>
+        </div>
+        <div class="form-group">
+            <label for="middleName" class="font-weight-bold" th:text="#{registerUser.middleName}"></label>
+            <input type="text" class="form-control" id="middleName" th:field="*{middleName}">
+            <p class="text-danger"
+               th:if="${#fields.hasErrors('middleName')}"
+               th:each="error : ${#fields.errors('middleName')}"
+               th:text="${error}"></p>
+        </div>
+        <div class="form-group">
+            <label for="surname" class="font-weight-bold" th:text="#{registerUser.surname}"></label>
+            <input type="text" class="form-control" id="surname" th:field="*{surname}">
+            <p class="text-danger"
+               th:if="${#fields.hasErrors('surname')}"
+               th:each="error : ${#fields.errors('surname')}"
+               th:text="${error}"></p>
+        </div>
+        <div class="form-group">
+            <label for="egn" class="font-weight-bold" th:text="#{registerUser.egn}"></label>
+            <input type="text" class="form-control" id="egn" th:field="*{egn}">
+            <p class="text-danger"
+               th:if="${#fields.hasErrors('egn')}"
+               th:each="error : ${#fields.errors('egn')}"
+               th:text="${error}"></p>
+        </div>
+        <div class="form-group">
+            <label for="phone" class="font-weight-bold" th:text="#{registerUser.phone}"></label>
+            <input type="text" class="form-control" id="phone" th:field="*{phone}">
+            <p class="text-danger"
+               th:if="${#fields.hasErrors('phone')}"
+               th:each="error : ${#fields.errors('phone')}"
+               th:text="${error}"></p>
+        </div>
+        <div class="form-group">
+            <label for="email" class="font-weight-bold" th:text="#{registerUser.email}"></label>
+            <input type="email" class="form-control" id="email" th:field="*{email}">
+            <p class="text-danger"
+               th:if="${#fields.hasErrors('email')}"
+               th:each="error : ${#fields.errors('email')}"
+               th:text="${error}"></p>
+        </div>
+        <div class="form-group">
+            <label for="grade" class="font-weight-bold" th:text="#{registerUser.grade}"></label>
+            <input type="number" class="form-control" id="grade" th:field="*{grade}">
+            <p class="text-danger"
+               th:if="${#fields.hasErrors('grade')}"
+               th:each="error : ${#fields.errors('grade')}"
+               th:text="${error}"></p>
+        </div>
+        <div class="form-group">
+            <label for="specialty" class="font-weight-bold" th:text="#{registerUser.specialty}"></label>
+            <select th:field="*{specialtyId}" id="specialty">
+                <option value="" th:text="#{registerUser.selectSpecialty}"></option>
+                <option th:each="specialty: ${specialties}"
+                        th:value="${specialty.id}"
+                        th:text="${specialty.name}"></option>
+            </select>
+            <p class="text-danger"
+               th:if="${#fields.hasErrors('specialtyId')}"
+               th:each="error : ${#fields.errors('specialtyId')}"
+               th:text="${error}"></p>
+        </div>
+        <div class="form-group">
+            <label for="studyType" class="font-weight-bold" th:text="#{registerUser.studyType}"></label>
+            <select th:field="*{studyType}" id="studyType">
+                <option value="" th:text="#{registerUser.selectStudyType}"></option>
+                <option th:each="studyType: ${studyTypes}"
+                        th:value="${studyType.name}"
+                        th:text="${studyType.name}"></option>
+            </select>
+            <p class="text-danger"
+               th:if="${#fields.hasErrors('studyType')}"
+               th:each="error : ${#fields.errors('studyType')}"
+               th:text="${error}"></p>
+        </div>
+        <div class="form-group">
+            <label for="profilePicture" th:text="#{registerUser.profilePicture}"></label>
+            <input type="file" th:field="*{profilePicture}" id="profilePicture"/>
+            <p class="text-danger"
+               th:if="${#fields.hasErrors('profilePicture')}"
+               th:each="error : ${#fields.errors('profilePicture')}"
+               th:text="${error}"></p>
+        </div>
+        <hr class="hr-2 bg-dark">
+        <div class="button-holder d-flex justify-content-center">
+            <button type="submit" class="btn btn-dark" th:text="#{registerUser.register}"></button>
+        </div>
+    </form>
+</th:block>
