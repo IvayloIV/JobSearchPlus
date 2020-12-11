@@ -9,7 +9,7 @@ public class FileUploader {
     private static final String BASE_PATH = "src/main/resources/static/";
 
     public String upload(String folderPath, MultipartFile multipartFile) {
-        if (multipartFile == null) {
+        if (multipartFile.isEmpty()) {
             return null;
         }
 

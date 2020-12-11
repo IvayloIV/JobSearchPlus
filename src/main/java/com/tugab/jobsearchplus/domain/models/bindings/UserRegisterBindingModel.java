@@ -7,7 +7,7 @@ import javax.validation.constraints.*;
 public class UserRegisterBindingModel {
 
     @NotNull
-    @Size(min = 10, max = 10, message = "{registerUser.facultyNumberSize}")
+    @Size(min = 8, max = 8, message = "{registerUser.facultyNumberSize}")
     private String facultyNumber;
 
     @NotNull

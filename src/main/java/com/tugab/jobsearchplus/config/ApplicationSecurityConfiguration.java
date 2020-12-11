@@ -20,8 +20,9 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
                 .csrfTokenRepository(this.csrfTokenRepository())
             .and()
                 .authorizeRequests()
-                .antMatchers("/user/login", "/user/register").anonymous()
-                .antMatchers("/").permitAll()
+                .antMatchers("/user/login").anonymous()
+                .antMatchers("/user/all", "/user/register").hasAuthority("ADMIN")
+                .antMatchers("/", "/job/all").permitAll()
                 .anyRequest().authenticated()
             .and()
                 .formLogin()
@@ -31,6 +32,7 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
                 .defaultSuccessUrl("/")
             .and()
                 .logout()
+                .logoutUrl("/user/logout")
                 .logoutSuccessUrl("/user/login");
     }
 

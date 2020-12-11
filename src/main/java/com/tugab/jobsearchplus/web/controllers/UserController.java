@@ -27,7 +27,7 @@ public class UserController extends BaseController {
     private final UserService userService;
     private final SpecialtyService specialtyService;
     private final ModelMapper modelMapper;
-    private int a;
+    private List<SpecialtyRegisterViewModel> specialties;
 
     @Autowired
     public UserController(ModelMapper modelMapper, UserService userService, SpecialtyService specialtyService) {
@@ -41,15 +41,18 @@ public class UserController extends BaseController {
         return new UserRegisterBindingModel();
     }
 
+    @ModelAttribute("specialties")
+    public List<SpecialtyRegisterViewModel> specialtyRegisterViewModels() {
+        return this.getSpecialties();
+    }
+
+    @ModelAttribute("studyTypes")
+    public StudyType[] studyTypes() {
+        return StudyType.values();
+    }
+
     @GetMapping("/register")
     public ModelAndView register(ModelAndView modelAndView) {
-        List<SpecialtyRegisterViewModel> specialtyRegisterViewModels = this.specialtyService.findAll()
-                .stream()
-                .map(s -> this.modelMapper.map(s, SpecialtyRegisterViewModel.class))
-                .collect(Collectors.toList());
-
-        modelAndView.addObject("specialties", specialtyRegisterViewModels);
-        modelAndView.addObject("studyTypes", StudyType.values());
         return super.view("user/register", modelAndView);
     }
 
@@ -61,12 +64,23 @@ public class UserController extends BaseController {
 
         UserServiceModel userServiceModel = this.modelMapper.map(registerBindingModel, UserServiceModel.class);
         this.userService.registerUser(userServiceModel);
-        return super.redirect("index");
+        return super.redirect("/"); //TODO: redirect to user profile??
     }
 
     @GetMapping("/login")
     public ModelAndView login(ModelAndView modelAndView) {
         modelAndView.addObject("loginBindingModel");
         return super.view("user/login", modelAndView);
+    }
+
+    private List<SpecialtyRegisterViewModel> getSpecialties() {
+        if (this.specialties == null) {
+            this.specialties = this.specialtyService.findAll()
+                    .stream()
+                    .map(s -> this.modelMapper.map(s, SpecialtyRegisterViewModel.class))
+                    .collect(Collectors.toList());
+        }
+
+        return specialties;
     }
 }
