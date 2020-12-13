@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.web.reactive.function.client.ExchangeStrategies;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
 public class ApplicationBeanConfiguration {
@@ -41,5 +43,17 @@ public class ApplicationBeanConfiguration {
         LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
         bean.setValidationMessageSource(this.messageSource());
         return bean;
+    }
+
+    @Bean
+    public WebClient webClient() {
+        WebClient webClient = WebClient.builder().exchangeStrategies(ExchangeStrategies.builder()
+                .codecs(configurer -> configurer
+                    .defaultCodecs()
+                    .maxInMemorySize(16 * 1024 * 1024))
+                .build())
+            .build();
+
+        return webClient;
     }
 }

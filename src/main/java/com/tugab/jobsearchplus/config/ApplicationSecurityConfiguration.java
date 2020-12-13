@@ -22,7 +22,7 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
                 .authorizeRequests()
                 .antMatchers("/user/login").anonymous()
                 .antMatchers("/user/all", "/user/register").hasAuthority("ADMIN")
-                .antMatchers("/", "/job/all").permitAll()
+                .antMatchers("/", "/job/list").permitAll()
                 .anyRequest().authenticated()
             .and()
                 .formLogin()

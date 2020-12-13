@@ -1,31 +1,46 @@
 package com.tugab.jobsearchplus.web.controllers;
 
-import org.springframework.http.HttpMethod;
+import com.tugab.jobsearchplus.domain.models.views.JobListViewModel;
+import com.tugab.jobsearchplus.service.JobService;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.reactive.function.client.ExchangeStrategies;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/job")
 public class JobController extends BaseController {
 
-    @GetMapping("/all")
-    public ModelAndView all() {
-        WebClient webClient = WebClient.builder().exchangeStrategies(ExchangeStrategies.builder()
-                .codecs(configurer -> configurer
-                        .defaultCodecs()
-                        .maxInMemorySize(16 * 1024 * 1024))
-                    .build())
-                .build();
+    private final JobService jobService;
+    private final ModelMapper modelMapper;
 
-        WebClient.RequestBodySpec request = webClient
-                .method(HttpMethod.GET)
-                .uri("");
+    @Autowired
+    public JobController(JobService jobService, ModelMapper modelMapper) {
+        this.jobService = jobService;
+        this.modelMapper = modelMapper;
+    }
 
-        String response2 = request.exchangeToMono(a -> a.bodyToMono(String.class)).block();
-        return super.view("/job/all");
+    @GetMapping("/list")
+    public ModelAndView list(@RequestParam(value = "page", required = false) Integer page,
+                             ModelAndView modelAndView) {//TODO: if string is passed in page
+        if (page == null) {
+            page = 1;
+        }
+        List<JobListViewModel> jobsViewModel = this.jobService.getJobs(page).stream()
+                .map(job -> this.modelMapper.map(job, JobListViewModel.class))
+                .collect(Collectors.toList());
+
+        long totalPages = this.jobService.getPageCount();
+
+        modelAndView.addObject("jobsViewModel", jobsViewModel);
+        modelAndView.addObject("currentPage", page);
+        modelAndView.addObject("totalPages", totalPages);
+        return super.view("/job/list", modelAndView);
     }
 }

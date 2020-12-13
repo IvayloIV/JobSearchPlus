@@ -1,0 +1,29 @@
+<th:block xmlns:th="http://www.thymeleaf.org" th:fragment="index">
+    <div th:each="job: ${jobsViewModel}" th:object="${job}">
+        <h4 th:text="*{title}"></h4>
+        <div th:text="*{region}"></div>
+        <div th:text="*{companyName}"></div>
+        <div th:text="*{updatedDate}"></div>
+        <a th:href="@{/job/details/{id}(id=*{recordId})}">Details</a>
+    </div>
+    <div class="my-3">
+        <ul class="pagination">
+            <li class="page-item"
+                th:classappend="${currentPage == 1} ? d-none: ''">
+                <a class="page-link" th:href="@{/job/list(page=${currentPage - 1})}">Previous</a>
+            </li>
+            <li th:each="i : ${#numbers.sequence(1, totalPages)}"
+                class="page-item"
+                th:classappend="${i == currentPage} ? active: ''">
+                <a class="page-link"
+                   th:href="@{/job/list(page=${i})}"
+                   th:text="${i}">
+                </a>
+            </li>
+            <li class="page-item"
+                th:classappend="${currentPage == totalPages} ? d-none: ''">
+                <a class="page-link" th:href="@{/job/list(page=${currentPage + 1})}">Next</a>
+            </li>
+        </ul>
+    </div>
+</th:block>

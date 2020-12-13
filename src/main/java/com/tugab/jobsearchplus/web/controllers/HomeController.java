@@ -9,6 +9,6 @@ public class HomeController extends BaseController {
 
     @GetMapping("/")
     public ModelAndView index() {
-        return super.redirect("job/all");
+        return super.redirect("job/list");
     }
 }

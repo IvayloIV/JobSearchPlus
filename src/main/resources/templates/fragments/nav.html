@@ -3,7 +3,7 @@
         <div class="collapse navbar-collapse d-flex justify-content-end" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/job/all}" th:title="#{navigation.jobs}"><i class="fas fa-briefcase"></i></a>
+                    <a class="nav-link" th:href="@{/job/list}" th:title="#{navigation.jobs}"><i class="fas fa-briefcase"></i></a>
                 </li>
                 <li class="nav-item" sec:authorize="isAnonymous()">
                     <a class="nav-link" th:href="@{/user/login}" th:title="#{navigation.login}"><i class="fas fa-sign-in-alt"></i></a>
