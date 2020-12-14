@@ -1,12 +1,8 @@
 package com.tugab.jobsearchplus.service;
 
-import com.tugab.jobsearchplus.domain.models.services.JobServiceModel;
-
-import java.util.List;
+import com.tugab.jobsearchplus.domain.models.services.JobFilterServiceModel;
 
 public interface JobService {
 
-    public long getPageCount();
-
-    public List<JobServiceModel> getJobs(Integer page);
+    public JobFilterServiceModel getJobs(Integer page, String jobName, String companyName, String region);
 }

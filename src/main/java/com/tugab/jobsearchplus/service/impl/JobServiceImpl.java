@@ -1,5 +1,6 @@
 package com.tugab.jobsearchplus.service.impl;
 
+import com.tugab.jobsearchplus.domain.models.services.JobFilterServiceModel;
 import com.tugab.jobsearchplus.domain.models.services.JobServiceModel;
 import com.tugab.jobsearchplus.domain.models.services.JobsServiceModel;
 import com.tugab.jobsearchplus.service.JobService;
@@ -9,7 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class JobServiceImpl implements JobService {
@@ -28,8 +31,36 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public long getPageCount() {
-        long totalJobs = this.getJobs().size();
+    public JobFilterServiceModel getJobs(Integer page, String jobName, String companyName, String region) {
+        long startJobIndex = (page - 1) * JOBS_PER_PAGE;
+        Stream<JobServiceModel> jobsStream = this.getJobs().stream();
+
+        if (jobName != null) {
+            jobsStream = this.addJobFilter(jobsStream, jobName, JobServiceModel::getTitle); //TODO: change title to jobName?
+        }
+
+        if (companyName != null) {
+            jobsStream = this.addJobFilter(jobsStream, companyName, JobServiceModel::getCompanyName);
+        }
+
+        if (region != null) {
+            jobsStream = this.addJobFilter(jobsStream, region, JobServiceModel::getRegion);
+        }
+
+        List<JobServiceModel> jobServiceModels = jobsStream
+                .collect(Collectors.toList());
+
+        long pageCount = this.getPageCount(jobServiceModels);
+        List<JobServiceModel> currentJobsPage = jobServiceModels.stream()
+                .skip(startJobIndex)
+                .limit(JOBS_PER_PAGE)
+                .collect(Collectors.toList());
+
+        return new JobFilterServiceModel(currentJobsPage, pageCount);
+    }
+
+    private long getPageCount(List<JobServiceModel> jobs) {
+        long totalJobs = jobs.size();
         if (totalJobs == 0) {
             return 1;
         }
@@ -37,14 +68,9 @@ public class JobServiceImpl implements JobService {
         return (long) Math.ceil(totalJobs / (double) JOBS_PER_PAGE);
     }
 
-    @Override
-    public List<JobServiceModel> getJobs(Integer page) {
-        long startJobIndex = (page - 1) * JOBS_PER_PAGE;
-
-        return this.getJobs().stream()
-                .skip(startJobIndex)
-                .limit(JOBS_PER_PAGE)
-                .collect(Collectors.toList());
+    private Stream<JobServiceModel> addJobFilter(Stream<JobServiceModel> jobsStream, String filterValue, Function<JobServiceModel, String> getSearchField) {
+        return jobsStream
+                .filter(j -> getSearchField.apply(j).toLowerCase().contains(filterValue.toLowerCase()));
     }
 
     private List<JobServiceModel> getJobs() { //TODO: move to repository??

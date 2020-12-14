@@ -1,5 +1,7 @@
 package com.tugab.jobsearchplus.web.controllers;
 
+import com.tugab.jobsearchplus.domain.models.services.JobFilterServiceModel;
+import com.tugab.jobsearchplus.domain.models.views.JobFilterViewModel;
 import com.tugab.jobsearchplus.domain.models.views.JobListViewModel;
 import com.tugab.jobsearchplus.service.JobService;
 import org.modelmapper.ModelMapper;
@@ -27,20 +29,26 @@ public class JobController extends BaseController {
     }
 
     @GetMapping("/list")
-    public ModelAndView list(@RequestParam(value = "page", required = false) Integer page,
+    public ModelAndView list(@RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
+                             @RequestParam(value = "jobName", required = false) String jobName,
+                             @RequestParam(value = "companyName", required = false) String companyName,
+                             @RequestParam(value = "region", required = false) String region,
                              ModelAndView modelAndView) {//TODO: if string is passed in page
-        if (page == null) {
-            page = 1;
-        }
-        List<JobListViewModel> jobsViewModel = this.jobService.getJobs(page).stream()
+        JobFilterServiceModel jobsServiceModel = this.jobService.getJobs(page, jobName, companyName, region);
+
+        List<JobListViewModel> jobsViewModel = jobsServiceModel.getJobServiceModels().stream()
                 .map(job -> this.modelMapper.map(job, JobListViewModel.class))
                 .collect(Collectors.toList());
 
-        long totalPages = this.jobService.getPageCount();
+        JobFilterViewModel jobFilterViewModel = new JobFilterViewModel();
+        jobFilterViewModel.setCurrentPage(page);
+        jobFilterViewModel.setTotalPages(jobsServiceModel.getPageCount());
+        jobFilterViewModel.setJobName(jobName);
+        jobFilterViewModel.setCompanyName(companyName);
+        jobFilterViewModel.setRegion(region);
 
         modelAndView.addObject("jobsViewModel", jobsViewModel);
-        modelAndView.addObject("currentPage", page);
-        modelAndView.addObject("totalPages", totalPages);
+        modelAndView.addObject("jobFilterViewModel", jobFilterViewModel);
         return super.view("/job/list", modelAndView);
     }
 }
