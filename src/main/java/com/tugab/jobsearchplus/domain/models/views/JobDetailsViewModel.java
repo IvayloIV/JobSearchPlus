@@ -1,43 +1,25 @@
-package com.tugab.jobsearchplus.domain.models.services;
+package com.tugab.jobsearchplus.domain.models.views;
 
-import com.tugab.jobsearchplus.utils.DateAdapter;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.Date;
 
-@XmlAccessorType(XmlAccessType.FIELD)
-public class JobServiceModel {
+public class JobDetailsViewModel {
 
-    @XmlElement(name = "record_id")
     private Long recordId;
 
-    @XmlElement(name = "name")
     private String title;
 
-    @XmlElement(name = "region")
     private String region;
 
-    @XmlElement(name = "salary")
     private String salary;
 
-    @XmlElement(name = "Job_category")
     private String jobCategory;
 
-    @XmlElement(name = "company")
     private String companyName;
 
-    @XmlElement(name = "description")
     private String description;
 
-    @XmlElement(name = "updated")
-    @XmlJavaTypeAdapter(DateAdapter.class)
     private Date updatedDate;
 
-    @XmlElement(name = "expire")
-    @XmlJavaTypeAdapter(DateAdapter.class)
     private Date expireDate;
 
     public Long getRecordId() {

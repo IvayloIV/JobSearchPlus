@@ -1,6 +1,8 @@
 package com.tugab.jobsearchplus.web.controllers;
 
 import com.tugab.jobsearchplus.domain.models.services.JobFilterServiceModel;
+import com.tugab.jobsearchplus.domain.models.services.JobServiceModel;
+import com.tugab.jobsearchplus.domain.models.views.JobDetailsViewModel;
 import com.tugab.jobsearchplus.domain.models.views.JobFilterViewModel;
 import com.tugab.jobsearchplus.domain.models.views.JobListViewModel;
 import com.tugab.jobsearchplus.service.JobService;
@@ -8,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -50,5 +53,14 @@ public class JobController extends BaseController {
         modelAndView.addObject("jobsViewModel", jobsViewModel);
         modelAndView.addObject("jobFilterViewModel", jobFilterViewModel);
         return super.view("/job/list", modelAndView);
+    }
+
+    @GetMapping("/details/{recordId}")
+    public ModelAndView details(@PathVariable("recordId") Long recordId, ModelAndView modelAndView) {
+        JobServiceModel jobServiceModel = this.jobService.getDetails(recordId);
+        JobDetailsViewModel jobModelView = this.modelMapper.map(jobServiceModel, JobDetailsViewModel.class);
+
+        modelAndView.addObject("jobModelView", jobModelView);
+        return super.view("/job/details", modelAndView);
     }
 }

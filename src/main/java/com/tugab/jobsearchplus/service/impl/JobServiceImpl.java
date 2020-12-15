@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -57,6 +58,15 @@ public class JobServiceImpl implements JobService {
                 .collect(Collectors.toList());
 
         return new JobFilterServiceModel(currentJobsPage, pageCount);
+    }
+
+    @Override
+    public JobServiceModel getDetails(Long recordId) {
+        Optional<JobServiceModel> job = this.getJobs().stream()
+                .filter(j -> j.getRecordId().equals(recordId))
+                .findFirst();
+
+        return job.orElse(null);
     }
 
     private long getPageCount(List<JobServiceModel> jobs) {

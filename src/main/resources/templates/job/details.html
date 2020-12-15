@@ -1,0 +1,23 @@
+<th:block xmlns:th="http://www.thymeleaf.org" th:fragment="jobDetails">
+    <div class="container" th:object="${jobModelView}">
+        <h3 th:text="*{title}"></h3>
+        <div class="row">
+            <div class="col col-lg-2" th:text="*{region}"></div>
+            <div class="col col-lg-2" th:text="*{#dates.format(updatedDate, 'dd.MM.yyyy HH:mm')}"></div>
+            <div class="col col-lg-2" th:text="*{#dates.format(expireDate, 'dd.MM.yyyy HH:mm')}"></div>
+            <div class="col col-lg-2" th:text="*{salary}"></div>
+        </div>
+        <div class="row">
+            <div class="col col-lg-2" th:text="*{companyName}"></div>
+            <div class="col col-lg-10" th:text="*{jobCategory}"></div>
+        </div>
+        <div class="row my-4">
+            <form class="form" th:action="@{/job/apply/recordId}" th:method="POST">
+                <button type="submit" class="btn btn-primary" th:text="Apply for"></button>
+            </form>
+        </div>
+        <div class="row">
+            <p th:utext="*{description}"></p>
+        </div>
+    </div>
+</th:block>

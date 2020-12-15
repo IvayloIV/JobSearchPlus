@@ -1,8 +1,10 @@
 package com.tugab.jobsearchplus.domain.models.views;
 
+import java.util.Date;
+
 public class JobListViewModel {
 
-    private String recordId;
+    private Long recordId;
 
     private String title;
 
@@ -10,20 +12,17 @@ public class JobListViewModel {
 
     private String companyName;
 
-    private String updatedDate;
+    private Date updatedDate;
 
-    public String getRecordId() {
+    public Long getRecordId() {
         return recordId;
     }
 
-    public void setRecordId(String recordId) {
+    public void setRecordId(Long recordId) {
         this.recordId = recordId;
     }
 
     public String getTitle() {
-        if (title == null) {
-            return "";
-        }
         return title;
     }
 
@@ -47,11 +46,11 @@ public class JobListViewModel {
         this.companyName = companyName;
     }
 
-    public String getUpdatedDate() {
+    public Date getUpdatedDate() {
         return updatedDate;
     }
 
-    public void setUpdatedDate(String updatedDate) {
+    public void setUpdatedDate(Date updatedDate) {
         this.updatedDate = updatedDate;
     }
 }

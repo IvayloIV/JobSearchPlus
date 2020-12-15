@@ -1,4 +1,4 @@
-<th:block xmlns:th="http://www.thymeleaf.org" th:fragment="index">
+<th:block xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" th:fragment="index">
     <div class="container" th:object="${jobFilterViewModel}">
         <form class="form row" th:action="@{/job/list}" th:method="GET">
             <div class="form-group col col-lg-3">
@@ -18,8 +18,9 @@
             <h4 th:text="*{title}"></h4>
             <div th:text="*{region}"></div>
             <div th:text="*{companyName}"></div>
-            <div th:text="*{updatedDate}"></div>
-            <a th:href="@{/job/details/{id}(id=*{recordId})}">Details</a>
+            <div th:text="*{#dates.format(updatedDate, 'dd.MM.yyyy HH:mm')}"></div>
+            <a sec:authorize="isAuthenticated()"
+               th:href="@{/job/details/{id}(id=*{recordId})}">Details</a>
         </div>
         <div class="my-3">
             <ul class="pagination">
