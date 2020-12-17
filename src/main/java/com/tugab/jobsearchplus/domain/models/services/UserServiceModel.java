@@ -1,5 +1,6 @@
 package com.tugab.jobsearchplus.domain.models.services;
 
+import com.tugab.jobsearchplus.domain.entities.JobHistory;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -30,6 +31,8 @@ public class UserServiceModel {
     private Double grade;
 
     private MultipartFile profilePicture;
+
+    private List<JobHistory> jobsHistory;
 
     private List<RoleServiceModel> roles;
 
@@ -131,6 +134,14 @@ public class UserServiceModel {
 
     public void setProfilePicture(MultipartFile profilePicture) {
         this.profilePicture = profilePicture;
+    }
+
+    public List<JobHistory> getJobsHistory() {
+        return jobsHistory;
+    }
+
+    public void setJobsHistory(List<JobHistory> jobsHistory) {
+        this.jobsHistory = jobsHistory;
     }
 
     public List<RoleServiceModel> getRoles() {

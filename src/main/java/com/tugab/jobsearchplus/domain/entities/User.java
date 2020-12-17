@@ -1,11 +1,12 @@
 package com.tugab.jobsearchplus.domain.entities;
 
 import com.tugab.jobsearchplus.domain.enums.StudyType;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
 import java.util.Collection;
 import java.util.List;
 
@@ -51,6 +52,14 @@ public class User implements UserDetails {
     @ManyToOne(targetEntity = Specialty.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "specialty_id", referencedColumnName = "id")
     private Specialty specialty;
+
+    @ManyToOne(targetEntity = JobStatus.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "job_status_id", referencedColumnName = "id")
+    private JobStatus jobStatus;
+
+    @OneToMany(targetEntity = JobHistory.class, mappedBy = "job", cascade = CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<JobHistory> jobsHistory;
 
     @ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",
@@ -183,6 +192,22 @@ public class User implements UserDetails {
 
     public void setSpecialty(Specialty specialty) {
         this.specialty = specialty;
+    }
+
+    public JobStatus getJobStatus() {
+        return jobStatus;
+    }
+
+    public void setJobStatus(JobStatus jobStatus) {
+        this.jobStatus = jobStatus;
+    }
+
+    public List<JobHistory> getJobsHistory() {
+        return jobsHistory;
+    }
+
+    public void setJobsHistory(List<JobHistory> jobsHistory) {
+        this.jobsHistory = jobsHistory;
     }
 
     public List<Role> getRoles() {

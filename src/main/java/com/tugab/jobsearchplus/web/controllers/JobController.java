@@ -1,20 +1,25 @@
 package com.tugab.jobsearchplus.web.controllers;
 
+import com.tugab.jobsearchplus.domain.entities.User;
 import com.tugab.jobsearchplus.domain.models.services.JobFilterServiceModel;
+import com.tugab.jobsearchplus.domain.models.services.JobHistoryServiceModel;
 import com.tugab.jobsearchplus.domain.models.services.JobServiceModel;
+import com.tugab.jobsearchplus.domain.models.services.UserServiceModel;
 import com.tugab.jobsearchplus.domain.models.views.JobDetailsViewModel;
 import com.tugab.jobsearchplus.domain.models.views.JobFilterViewModel;
 import com.tugab.jobsearchplus.domain.models.views.JobListViewModel;
+import com.tugab.jobsearchplus.domain.models.views.JobStatusViewModel;
 import com.tugab.jobsearchplus.service.JobService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,11 +61,32 @@ public class JobController extends BaseController {
     }
 
     @GetMapping("/details/{recordId}")
-    public ModelAndView details(@PathVariable("recordId") Long recordId, ModelAndView modelAndView) {
+    public ModelAndView details(@PathVariable("recordId") Long recordId,
+                                @AuthenticationPrincipal User user,
+                                ModelAndView modelAndView) {
         JobServiceModel jobServiceModel = this.jobService.getDetails(recordId);
         JobDetailsViewModel jobModelView = this.modelMapper.map(jobServiceModel, JobDetailsViewModel.class);
 
+        UserServiceModel userServiceModel = this.modelMapper.map(user, UserServiceModel.class);
+        JobHistoryServiceModel lastUserJob = this.jobService.getLastUserJob(userServiceModel);
+
+        JobStatusViewModel jobStatusViewModel = this.modelMapper.map(user.getJobStatus(), JobStatusViewModel.class);
+
+//        if (lastUserJob != null) {
+//            Long lastUserJobId = lastUserJob.getJobService().getRecordId();
+//            modelAndView.addObject("lastUserJobId", lastUserJobId);
+//        }
+
         modelAndView.addObject("jobModelView", jobModelView);
+        modelAndView.addObject("userStatus", jobStatusViewModel);
         return super.view("/job/details", modelAndView);
+    }
+
+    @PostMapping("/{recordId}/status/{statusId}")
+    public ModelAndView status(@PathVariable("recordId") Long recordId,
+                               @PathVariable("statusId") String status,
+                               @AuthenticationPrincipal User user) {
+        this.jobService.changeJobStatus(user, recordId, status);
+        return super.redirect("/job/details/" + recordId);
     }
 }

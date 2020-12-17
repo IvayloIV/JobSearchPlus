@@ -1,14 +1,21 @@
 package com.tugab.jobsearchplus.service.impl;
 
-import com.tugab.jobsearchplus.domain.models.services.JobFilterServiceModel;
-import com.tugab.jobsearchplus.domain.models.services.JobServiceModel;
-import com.tugab.jobsearchplus.domain.models.services.JobsServiceModel;
+import com.tugab.jobsearchplus.domain.entities.Job;
+import com.tugab.jobsearchplus.domain.entities.JobHistory;
+import com.tugab.jobsearchplus.domain.entities.JobStatus;
+import com.tugab.jobsearchplus.domain.entities.User;
+import com.tugab.jobsearchplus.domain.models.services.*;
+import com.tugab.jobsearchplus.repository.JobRepository;
+import com.tugab.jobsearchplus.repository.JobStatusRepository;
+import com.tugab.jobsearchplus.repository.UserRepository;
 import com.tugab.jobsearchplus.service.JobService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -20,6 +27,10 @@ public class JobServiceImpl implements JobService {
 
     private static final int JOBS_PER_PAGE = 20;
 
+    private final JobRepository jobRepository;
+    private final JobStatusRepository jobStatusRepository;
+    private final UserRepository userRepository;
+    private final ModelMapper modelMapper;
     private final WebClient webClient;
 
     private List<JobServiceModel> jobs;
@@ -27,7 +38,15 @@ public class JobServiceImpl implements JobService {
     @Value("${jobTiger.jobsUrl}")
     private String jobsUrl;
 
-    public JobServiceImpl(WebClient webClient) {
+    public JobServiceImpl(JobRepository jobRepository,
+                          JobStatusRepository jobStatusRepository,
+                          UserRepository userRepository,
+                          ModelMapper modelMapper,
+                          WebClient webClient) {
+        this.jobRepository = jobRepository;
+        this.jobStatusRepository = jobStatusRepository;
+        this.userRepository = userRepository;
+        this.modelMapper = modelMapper;
         this.webClient = webClient;
     }
 
@@ -67,6 +86,52 @@ public class JobServiceImpl implements JobService {
                 .findFirst();
 
         return job.orElse(null);
+    }
+
+    @Override
+    public void changeJobStatus(User user, Long recordId, String status) {
+        JobServiceModel jobServiceModel = this.getJobs().stream()
+                .filter(j -> j.getRecordId().equals(recordId))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Job does not exist!"));
+        Job job = this.modelMapper.map(jobServiceModel, Job.class);
+
+        boolean jobExist = this.jobRepository.existsById(recordId);
+        if (!jobExist) {
+            this.jobRepository.save(job);
+        }
+
+        JobStatus newJobStatus = this.jobStatusRepository.findByName(status)
+                .orElseThrow(() -> new IllegalArgumentException("Job status does not exist!"));
+
+        JobHistory jobHistory = new JobHistory();
+        jobHistory.setUser(user);
+        jobHistory.setJob(job);
+        jobHistory.setOldStatus(user.getJobStatus());
+        jobHistory.setNewStatus(newJobStatus);
+        jobHistory.setCreatedDate(new Date());
+
+        List<JobHistory> jobsHistory = user.getJobsHistory();
+        jobsHistory.add(jobHistory);
+
+        user.setJobStatus(newJobStatus);
+        this.userRepository.save(user);
+    }
+
+    @Override
+    public JobHistoryServiceModel getLastUserJob(UserServiceModel userServiceModel) {
+        //TODO: get job history by user id and return it
+        List<JobHistory> jobsHistory = userServiceModel.getJobsHistory();
+
+        JobHistory jobHistory = jobsHistory.stream()
+            .min((a, b) -> b.getCreatedDate().compareTo(a.getCreatedDate()))
+            .orElse(null);
+
+        if (jobHistory == null) {
+            return null;
+        }
+
+        return this.modelMapper.map(jobHistory, JobHistoryServiceModel.class);
     }
 
     private long getPageCount(List<JobServiceModel> jobs) {

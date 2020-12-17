@@ -8,7 +8,7 @@ CREATE TABLE specialties (
 	created_date DATE
 );
 
-CREATE TABLE JOB_STATUS (
+CREATE TABLE JOBS_STATUS (
 	id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
 	name VARCHAR(254) NOT NULL
 );
@@ -44,25 +44,25 @@ CREATE TABLE USERS_ROLES (
   FOREIGN KEY (role_id) REFERENCES roles(id)
 );
 
-CREATE TABLE JOB (
+CREATE TABLE JOBS (
 	record_id INT UNSIGNED PRIMARY KEY,
 	title VARCHAR(511) NOT NULL,
   region VARCHAR(255) NOT NULL,
   salary VARCHAR(255),
-  category VARCHAR(511),
+  job_category VARCHAR(511),
   company_name VARCHAR(255),
   description TEXT,
-  updated_date DATE NOT NULL,
-  expire_date DATE
+  updated_date DATETIME NOT NULL,
+  expire_date DATETIME
 );
 
-CREATE TABLE JOB_HISTORY (
-	id INT UNSIGNED PRIMARY KEY,
+CREATE TABLE JOBS_HISTORY (
+	id VARCHAR(254) PRIMARY KEY,
 	faculty_number CHAR(10) NOT NULL,
 	job_record_id INT UNSIGNED NOT NULL,
 	old_status_id INT UNSIGNED NOT NULL,
   new_status_id INT UNSIGNED NOT NULL,
-  created_date DATE NOT NULL,
+  created_date DATETIME NOT NULL,
   FOREIGN KEY (faculty_number) REFERENCES users(faculty_number),
   FOREIGN KEY (job_record_id) REFERENCES job(record_id),
   FOREIGN KEY (old_status_id) REFERENCES job_status(id),
@@ -75,10 +75,10 @@ INSERT INTO specialties (name, created_date) VALUES ('OC', NOW());
 INSERT INTO specialties (name, created_date) VALUES ('KP', NOW());
 commit;
 
-INSERT INTO JOB_STATUS (name) VALUES('Unemployed');
-INSERT INTO JOB_STATUS (name) VALUES('Applied');
-INSERT INTO JOB_STATUS (name) VALUES('Rejected');
-INSERT INTO JOB_STATUS (name) VALUES('Accepted');
-INSERT INTO JOB_STATUS (name) VALUES('Left');
-INSERT INTO JOB_STATUS (name) VALUES('Surrendered');
+INSERT INTO JOBS_STATUS (name) VALUES('Unemployed');
+INSERT INTO JOBS_STATUS (name) VALUES('Applied');
+INSERT INTO JOBS_STATUS (name) VALUES('Rejected');
+INSERT INTO JOBS_STATUS (name) VALUES('Accepted');
+INSERT INTO JOBS_STATUS (name) VALUES('Left');
+INSERT INTO JOBS_STATUS (name) VALUES('Surrendered');
 commit;
