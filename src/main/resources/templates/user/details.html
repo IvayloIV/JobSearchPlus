@@ -1,0 +1,39 @@
+<th:block xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" th:fragment="userDetails">
+    <div class="container">
+        <div class="row" th:object="${userDetailsViewModel}">
+            <div class="col-xs-12 col-sm-6 col-md-6">
+                <div class="well well-sm">
+                    <div class="row">
+                        <div class="col-sm-6 col-md-4">
+                            <img th:src="@{/image/profile/{picture}(picture=*{pictureName})}"
+                                 th:alt="*{pictureName}"
+                                 th:width="116px"
+                                 th:height="127px"
+                                 class="img-rounded img-responsive"/>
+                        </div>
+                        <div class="col-sm-6 col-md-8">
+                            <h4 th:text="*{fullName}"></h4>
+                            <small th:text="*{facultyNumber + ', ' + egn}"></small>
+                            <p>
+                                <i class="glyphicon glyphicon-envelope"></i>
+                                <span th:text="*{email}"></span>
+                                <br />
+                                <i class="glyphicon glyphicon-globe"></i>
+                                <span th:text="*{phone}"></span>
+                                <br />
+                                <span th:text="*{grade}"></span>
+                                <br />
+                                <span th:text="*{specialtyName}"></span>
+                                <br />
+                                <span th:text="*{studyType}"></span>
+                                <br />
+                                <span th:text="*{jobStatusName}"></span>
+                            </p>
+                            <button type="button" class="btn btn-primary">Show</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>

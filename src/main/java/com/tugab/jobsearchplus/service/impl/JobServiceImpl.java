@@ -5,6 +5,7 @@ import com.tugab.jobsearchplus.domain.entities.JobHistory;
 import com.tugab.jobsearchplus.domain.entities.JobStatus;
 import com.tugab.jobsearchplus.domain.entities.User;
 import com.tugab.jobsearchplus.domain.models.services.*;
+import com.tugab.jobsearchplus.repository.JobHistoryRepository;
 import com.tugab.jobsearchplus.repository.JobRepository;
 import com.tugab.jobsearchplus.repository.JobStatusRepository;
 import com.tugab.jobsearchplus.repository.UserRepository;
@@ -15,10 +16,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
+import java.util.*;
+import java.util.function.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -29,6 +28,7 @@ public class JobServiceImpl implements JobService {
 
     private final JobRepository jobRepository;
     private final JobStatusRepository jobStatusRepository;
+    private final JobHistoryRepository jobHistoryRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final WebClient webClient;
@@ -41,10 +41,12 @@ public class JobServiceImpl implements JobService {
     public JobServiceImpl(JobRepository jobRepository,
                           JobStatusRepository jobStatusRepository,
                           UserRepository userRepository,
+                          JobHistoryRepository jobHistoryRepository,
                           ModelMapper modelMapper,
                           WebClient webClient) {
         this.jobRepository = jobRepository;
         this.jobStatusRepository = jobStatusRepository;
+        this.jobHistoryRepository = jobHistoryRepository;
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.webClient = webClient;
@@ -120,18 +122,24 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public JobHistoryServiceModel getLastUserJob(UserServiceModel userServiceModel) {
-        //TODO: get job history by user id and return it
-        List<JobHistory> jobsHistory = userServiceModel.getJobsHistory();
+        User user = this.modelMapper.map(userServiceModel, User.class);
+        List<JobHistory> jobsHistory = this.jobHistoryRepository.findAllByUserOrderByCreatedDateDesc(user);
 
-        JobHistory jobHistory = jobsHistory.stream()
-            .min((a, b) -> b.getCreatedDate().compareTo(a.getCreatedDate()))
-            .orElse(null);
-
-        if (jobHistory == null) {
+        if (jobsHistory.size() == 0) {
             return null;
         }
 
-        return this.modelMapper.map(jobHistory, JobHistoryServiceModel.class);
+        return this.modelMapper.map(jobsHistory.get(0), JobHistoryServiceModel.class);
+    }
+
+    @Override
+    public List<JobHistoryServiceModel> getJobsHistoryByJob(JobServiceModel jobServiceModel) {
+        Job job = this.modelMapper.map(jobServiceModel, Job.class);
+        List<JobHistory> jobsHistory = this.jobHistoryRepository.findAllByJobOrderByCreatedDateDesc(job);
+
+        return jobsHistory.stream()
+                .map(j -> this.modelMapper.map(j, JobHistoryServiceModel.class))
+                .collect(Collectors.toList());
     }
 
     private long getPageCount(List<JobServiceModel> jobs) {

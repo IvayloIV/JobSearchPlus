@@ -14,6 +14,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -54,6 +56,12 @@ public class UserServiceImpl implements UserService {
         } catch (RuntimeException ex) {
             return false;
         }
+    }
+
+    @Override
+    public UserServiceModel getUserByFacultyNumber(String facultyNumber) {
+        Optional<User> user = this.userRepository.findByFacultyNumber(facultyNumber);
+        return user.map(u -> this.modelMapper.map(u, UserServiceModel.class)).orElse(null);
     }
 
     @Override

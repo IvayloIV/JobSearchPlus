@@ -9,6 +9,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class RoleServiceImpl implements RoleService {
 
@@ -34,5 +36,11 @@ public class RoleServiceImpl implements RoleService {
         Role role = this.roleRepository.findByAuthority("USER");
         RoleServiceModel roleServiceModel = this.modelMapper.map(role, RoleServiceModel.class);
         userServiceModel.getRoles().add(roleServiceModel);
+    }
+
+    @Override
+    public boolean userHasRole(List<Role> roles, String roleName) {
+        Role role = this.roleRepository.findByAuthority(roleName);
+        return roles.stream().anyMatch(r -> r.getId().equals(role.getId()));
     }
 }

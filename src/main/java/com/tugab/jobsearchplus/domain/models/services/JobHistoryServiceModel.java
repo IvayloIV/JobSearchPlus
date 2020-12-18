@@ -8,7 +8,7 @@ public class JobHistoryServiceModel {
 
     private UserServiceModel user;
 
-    private JobServiceModel jobService;
+    private JobServiceModel job;
 
     private JobStatusServiceModel oldStatus;
 
@@ -32,12 +32,12 @@ public class JobHistoryServiceModel {
         this.user = user;
     }
 
-    public JobServiceModel getJobService() {
-        return jobService;
+    public JobServiceModel getJob() {
+        return job;
     }
 
-    public void setJobService(JobServiceModel jobService) {
-        this.jobService = jobService;
+    public void setJob(JobServiceModel job) {
+        this.job = job;
     }
 
     public JobStatusServiceModel getOldStatus() {

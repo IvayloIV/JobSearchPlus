@@ -6,4 +6,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 public interface UserService extends UserDetailsService {
 
     public boolean registerUser(UserServiceModel userServiceModel);
+
+    public UserServiceModel getUserByFacultyNumber(String facultyNumber);
 }

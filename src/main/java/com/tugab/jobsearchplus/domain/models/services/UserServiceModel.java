@@ -24,13 +24,17 @@ public class UserServiceModel {
 
     private String email;
 
-    private Long specialtyId;
+    private SpecialtyServiceModel specialty;
 
     private String studyType;
 
     private Double grade;
 
     private MultipartFile profilePicture;
+
+    private String pictureName;
+
+    private JobStatusServiceModel jobStatus;
 
     private List<JobHistory> jobsHistory;
 
@@ -104,12 +108,12 @@ public class UserServiceModel {
         this.email = email;
     }
 
-    public Long getSpecialtyId() {
-        return specialtyId;
+    public SpecialtyServiceModel getSpecialty() {
+        return specialty;
     }
 
-    public void setSpecialtyId(Long specialtyId) {
-        this.specialtyId = specialtyId;
+    public void setSpecialty(SpecialtyServiceModel specialty) {
+        this.specialty = specialty;
     }
 
     public String getStudyType() {
@@ -134,6 +138,22 @@ public class UserServiceModel {
 
     public void setProfilePicture(MultipartFile profilePicture) {
         this.profilePicture = profilePicture;
+    }
+
+    public String getPictureName() {
+        return pictureName;
+    }
+
+    public void setPictureName(String pictureName) {
+        this.pictureName = pictureName;
+    }
+
+    public JobStatusServiceModel getJobStatus() {
+        return jobStatus;
+    }
+
+    public void setJobStatus(JobStatusServiceModel jobStatus) {
+        this.jobStatus = jobStatus;
     }
 
     public List<JobHistory> getJobsHistory() {

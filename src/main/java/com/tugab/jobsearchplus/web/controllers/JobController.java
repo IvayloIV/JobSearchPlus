@@ -5,10 +5,7 @@ import com.tugab.jobsearchplus.domain.models.services.JobFilterServiceModel;
 import com.tugab.jobsearchplus.domain.models.services.JobHistoryServiceModel;
 import com.tugab.jobsearchplus.domain.models.services.JobServiceModel;
 import com.tugab.jobsearchplus.domain.models.services.UserServiceModel;
-import com.tugab.jobsearchplus.domain.models.views.JobDetailsViewModel;
-import com.tugab.jobsearchplus.domain.models.views.JobFilterViewModel;
-import com.tugab.jobsearchplus.domain.models.views.JobListViewModel;
-import com.tugab.jobsearchplus.domain.models.views.JobStatusViewModel;
+import com.tugab.jobsearchplus.domain.models.views.*;
 import com.tugab.jobsearchplus.service.JobService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,12 +69,18 @@ public class JobController extends BaseController {
 
         JobStatusViewModel jobStatusViewModel = this.modelMapper.map(user.getJobStatus(), JobStatusViewModel.class);
 
-//        if (lastUserJob != null) {
-//            Long lastUserJobId = lastUserJob.getJobService().getRecordId();
-//            modelAndView.addObject("lastUserJobId", lastUserJobId);
-//        }
+        List<JobHistoryServiceModel> jobsHistory = this.jobService.getJobsHistoryByJob(jobServiceModel);
+        List<JobHistoryDetailsViewModel> jobsHistoryViewModel = jobsHistory.stream()
+                .map(j -> this.modelMapper.map(j, JobHistoryDetailsViewModel.class))
+                .collect(Collectors.toList());
+
+        if (lastUserJob != null) {
+            Long lastUserJobId = lastUserJob.getJob().getRecordId();
+            modelAndView.addObject("lastUserJobId", lastUserJobId);
+        }
 
         modelAndView.addObject("jobModelView", jobModelView);
+        modelAndView.addObject("jobsHistoryViewModel", jobsHistoryViewModel);
         modelAndView.addObject("userStatus", jobStatusViewModel);
         return super.view("/job/details", modelAndView);
     }
