@@ -16,4 +16,6 @@ public interface JobService {
     public JobHistoryServiceModel getLastUserJob(UserServiceModel userServiceModel);
 
     public List<JobHistoryServiceModel> getJobsHistoryByJob(JobServiceModel jobServiceModel);
+
+    public List<JobHistoryServiceModel> getJobsHistoryByUser(UserServiceModel userServiceModel);
 }

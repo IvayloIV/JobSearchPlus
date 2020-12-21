@@ -1,0 +1,52 @@
+<th:block xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" th:fragment="userList">
+    <div class="container">
+        <!--<form class="form row" th:action="@{/job/list}" th:method="GET">-->
+            <!--<div class="form-group col col-lg-3">-->
+                <!--<input type="text" class="form-control" placeholder="Job name" name="jobName" th:value="*{jobName}">-->
+            <!--</div>-->
+            <!--<div class="form-group col col-lg-3">-->
+                <!--<input type="text" class="form-control" placeholder="Company name" name="companyName" th:value="*{companyName}">-->
+            <!--</div>-->
+            <!--<div class="form-group col col-lg-3">-->
+                <!--<input type="text" class="form-control" placeholder="Region" name="region" th:value="*{region}">-->
+            <!--</div>-->
+            <!--<div class="col col-lg-3">-->
+                <!--<button type="submit" class="btn btn-dark" th:text="Search"></button>-->
+            <!--</div>-->
+        <!--</form>-->
+        <div class="card-deck">
+            <div class="card" th:each="user: ${usersViewModel}" th:object="${user}">
+                <h4 class="mx-auto my-2" th:text="*{name + ' ' + surname}"></h4>
+                <img class="card-img-top"
+                     th:src="@{/image/profile/{picture}(picture=*{pictureName})}"
+                     th:alt="*{pictureName}"
+                     th:width="250px"
+                     th:height="180px">
+                <div class="card-body">
+                    <p class="card-text" th:text="*{facultyNumber}"></p>
+                    <p class="card-text" th:text="*{jobStatusName}"></p>
+                </div>
+            </div>
+        </div>
+        <!--<div class="my-3">-->
+            <!--<ul class="pagination">-->
+                <!--<li class="page-item"-->
+                    <!--th:classappend="*{currentPage == 1} ? d-none: ''">-->
+                    <!--<a class="page-link" th:href="@{/job/list(page=*{currentPage - 1},jobName=*{jobName},companyName=*{companyName},region=*{region})}">Previous</a>-->
+                <!--</li>-->
+                <!--<li th:each="i : *{#numbers.sequence(1, totalPages)}"-->
+                    <!--class="page-item"-->
+                    <!--th:classappend="${i == jobFilterViewModel.currentPage} ? active: ''">-->
+                    <!--<a class="page-link"-->
+                       <!--th:href="@{/job/list(page=${i},jobName=*{jobName},companyName=*{companyName},region=*{region})}"-->
+                       <!--th:text="${i}">-->
+                    <!--</a>-->
+                <!--</li>-->
+                <!--<li class="page-item"-->
+                    <!--th:classappend="*{currentPage == totalPages} ? d-none: ''">-->
+                    <!--<a class="page-link" th:href="@{/job/list(page=*{currentPage + 1},jobName=*{jobName},companyName=*{companyName},region=*{region})}">Next</a>-->
+                <!--</li>-->
+            <!--</ul>-->
+        <!--</div>-->
+    <!--</div>-->
+</th:block>

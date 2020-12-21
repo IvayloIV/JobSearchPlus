@@ -7,16 +7,15 @@ import com.tugab.jobsearchplus.domain.models.services.JobServiceModel;
 import com.tugab.jobsearchplus.domain.models.services.UserServiceModel;
 import com.tugab.jobsearchplus.domain.models.views.*;
 import com.tugab.jobsearchplus.service.JobService;
+import com.tugab.jobsearchplus.service.RoleService;
+import com.tugab.jobsearchplus.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,11 +24,18 @@ import java.util.stream.Collectors;
 public class JobController extends BaseController {
 
     private final JobService jobService;
+    private final UserService userService;
+    private final RoleService roleService;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public JobController(JobService jobService, ModelMapper modelMapper) {
+    public JobController(JobService jobService,
+                         UserService userService,
+                         RoleService roleService,
+                         ModelMapper modelMapper) {
         this.jobService = jobService;
+        this.userService = userService;
+        this.roleService = roleService;
         this.modelMapper = modelMapper;
     }
 
@@ -88,8 +94,16 @@ public class JobController extends BaseController {
     @PostMapping("/{recordId}/status/{statusId}")
     public ModelAndView status(@PathVariable("recordId") Long recordId,
                                @PathVariable("statusId") String status,
-                               @AuthenticationPrincipal User user) {
+                               @AuthenticationPrincipal User user,
+                               String facultyNumber,
+                               String redirectUrl) {
+        boolean isAdmin = this.roleService.userHasRole(user.getRoles(), "ADMIN");
+        if (facultyNumber != null && isAdmin) {
+            UserServiceModel userServiceModel = this.userService.getUserByFacultyNumber(facultyNumber);
+            user = this.modelMapper.map(userServiceModel, User.class);
+        }
+
         this.jobService.changeJobStatus(user, recordId, status);
-        return super.redirect("/job/details/" + recordId);
+        return super.redirect(redirectUrl);
     }
 }

@@ -8,11 +8,11 @@
                 <li class="nav-item" sec:authorize="isAnonymous()">
                     <a class="nav-link" th:href="@{/user/login}" th:title="#{navigation.login}"><i class="fas fa-sign-in-alt"></i></a>
                 </li>
-                <li class="nav-item" sec:authorize="hasRole('USER')">
+                <li class="nav-item" sec:authorize="hasAuthority('USER')">
                     <a class="nav-link" th:href="@{/user/profile}" th:title="#{navigation.profile}"><i class="fas fa-user"></i></a>
                 </li>
                 <li class="nav-item" sec:authorize="hasAuthority('ADMIN')">
-                    <a class="nav-link" th:href="@{/user/all}" th:title="#{navigation.users}"><i class="fas fa-users"></i></a>
+                    <a class="nav-link" th:href="@{/user/list}" th:title="#{navigation.users}"><i class="fas fa-users"></i></a>
                 </li>
                 <li class="nav-item" sec:authorize="hasAuthority('ADMIN')">
                     <a class="nav-link" th:href="@{/user/register}" th:title="#{navigation.register}"><i class="fas fa-user-plus"></i></a>

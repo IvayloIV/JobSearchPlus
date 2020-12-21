@@ -29,11 +29,60 @@
                                 <br />
                                 <span th:text="*{jobStatusName}"></span>
                             </p>
-                            <button type="button" class="btn btn-primary">Show</button>
+                            <div sec:authorize="hasAuthority('ADMIN')"
+                                 th:if="*{jobStatusName == 'Applied'}">
+                                <form class="form" th:action="@{/job/{recordId}/status/Rejected(recordId=${lastUserJobId})}" th:method="POST">
+                                    <input type="hidden" name="facultyNumber" th:value="*{facultyNumber}">
+                                    <input type="hidden" name="redirectUrl" th:value="${'/user/details/' + userDetailsViewModel.facultyNumber}">
+                                    <button type="submit" class="btn btn-danger">Reject</button>
+                                </form>
+                                <form class="form" th:action="@{/job/{recordId}/status/Accepted(recordId=${lastUserJobId})}" th:method="POST">
+                                    <input type="hidden" name="facultyNumber" th:value="*{facultyNumber}">
+                                    <input type="hidden" name="redirectUrl" th:value="${'/user/details/' + userDetailsViewModel.facultyNumber}">
+                                    <button type="submit" class="btn btn-success">Accept</button>
+                                </form>
+                            </div>
+                            <div sec:authorize="!hasAuthority('ADMIN')">
+                                <th:block th:if="*{jobStatusName == 'Applied'}">
+                                    <form class="form" th:action="@{/job/{recordId}/status/Surrendered(recordId=${lastUserJobId})}" th:method="POST">
+                                        <input type="hidden" name="redirectUrl" th:value="${'/user/details/' + userDetailsViewModel.facultyNumber}">
+                                        <button type="submit" class="btn btn-danger">Surrendered</button>
+                                    </form>
+                                </th:block>
+                                <th:block th:if="*{jobStatusName == 'Accepted'}">
+                                    <form class="form" th:action="@{/job/{recordId}/status/Left(recordId=${lastUserJobId})}" th:method="POST">
+                                        <input type="hidden" name="redirectUrl" th:value="${'/user/details/' + userDetailsViewModel.facultyNumber}">
+                                        <button type="submit" class="btn btn-danger">Left</button>
+                                    </form>
+                                </th:block>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="row" sec:authorize="hasAuthority('ADMIN')">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Номер на работа</th>
+                    <th scope="col">Име на работа</th>
+                    <th scope="col">Статус</th>
+                    <th scope="col">Дата на промяна</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="userJobHistory: ${userJobHistoryViewModels}" th:object="${userJobHistory}">
+                    <th scope="row">
+                        <a th:href="@{/job/details/{jobRecordId}(jobRecordId=*{jobRecordId})}"
+                           th:text="*{jobRecordId}"></a>
+                    </th>
+                    <td th:text="*{jobTitle}"></td>
+                    <td th:text="*{newStatusName}"></td>
+                    <td th:text="*{#dates.format(createdDate, 'dd.MM.yyyy HH:mm')}"></td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </th:block>

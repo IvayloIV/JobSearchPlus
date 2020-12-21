@@ -83,11 +83,19 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public JobServiceModel getDetails(Long recordId) {
-        Optional<JobServiceModel> job = this.getJobs().stream()
+        Optional<JobServiceModel> jobServiceModel = this.getJobs().stream()
                 .filter(j -> j.getRecordId().equals(recordId))
                 .findFirst();
 
-        return job.orElse(null);
+        if (!jobServiceModel.isPresent()) {
+            Optional<Job> job = this.jobRepository.findById(recordId);
+
+            if (job.isPresent()) {
+                jobServiceModel = Optional.of(this.modelMapper.map(job.get(), JobServiceModel.class));
+            }
+        }
+
+        return jobServiceModel.orElse(null);
     }
 
     @Override
@@ -136,6 +144,16 @@ public class JobServiceImpl implements JobService {
     public List<JobHistoryServiceModel> getJobsHistoryByJob(JobServiceModel jobServiceModel) {
         Job job = this.modelMapper.map(jobServiceModel, Job.class);
         List<JobHistory> jobsHistory = this.jobHistoryRepository.findAllByJobOrderByCreatedDateDesc(job);
+
+        return jobsHistory.stream()
+                .map(j -> this.modelMapper.map(j, JobHistoryServiceModel.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<JobHistoryServiceModel> getJobsHistoryByUser(UserServiceModel userServiceModel) {
+        User user = this.modelMapper.map(userServiceModel, User.class);
+        List<JobHistory> jobsHistory = this.jobHistoryRepository.findAllByUserOrderByCreatedDateDesc(user);
 
         return jobsHistory.stream()
                 .map(j -> this.modelMapper.map(j, JobHistoryServiceModel.class))

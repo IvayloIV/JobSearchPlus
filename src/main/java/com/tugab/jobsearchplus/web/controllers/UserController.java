@@ -3,9 +3,13 @@ package com.tugab.jobsearchplus.web.controllers;
 import com.tugab.jobsearchplus.domain.entities.User;
 import com.tugab.jobsearchplus.domain.enums.StudyType;
 import com.tugab.jobsearchplus.domain.models.bindings.UserRegisterBindingModel;
+import com.tugab.jobsearchplus.domain.models.services.JobHistoryServiceModel;
 import com.tugab.jobsearchplus.domain.models.services.UserServiceModel;
 import com.tugab.jobsearchplus.domain.models.views.SpecialtyRegisterViewModel;
+import com.tugab.jobsearchplus.domain.models.views.UserListViewModel;
 import com.tugab.jobsearchplus.domain.models.views.UserDetailsViewModel;
+import com.tugab.jobsearchplus.domain.models.views.UserJobHistoryViewModel;
+import com.tugab.jobsearchplus.service.JobService;
 import com.tugab.jobsearchplus.service.RoleService;
 import com.tugab.jobsearchplus.service.SpecialtyService;
 import com.tugab.jobsearchplus.service.UserService;
@@ -28,6 +32,7 @@ public class UserController extends BaseController {
     private final UserService userService;
     private final RoleService roleService;
     private final SpecialtyService specialtyService;
+    private final JobService jobService;
     private final ModelMapper modelMapper;
     private List<SpecialtyRegisterViewModel> specialties;
 
@@ -35,10 +40,12 @@ public class UserController extends BaseController {
     public UserController(ModelMapper modelMapper,
                           RoleService roleService,
                           UserService userService,
+                          JobService jobService,
                           SpecialtyService specialtyService) {
         this.modelMapper = modelMapper;
         this.roleService = roleService;
         this.userService = userService;
+        this.jobService = jobService;
         this.specialtyService = specialtyService;
     }
 
@@ -92,8 +99,35 @@ public class UserController extends BaseController {
         UserDetailsViewModel userDetailsViewModel = this.modelMapper
                 .map(userServiceModel, UserDetailsViewModel.class);
 
+        JobHistoryServiceModel lastUserJob = this.jobService.getLastUserJob(userServiceModel);
+        if (lastUserJob != null) {
+            modelAndView.addObject("lastUserJobId", lastUserJob.getJob().getRecordId());
+        }
+
+        List<JobHistoryServiceModel> jobHistoryServiceModels = this.jobService.getJobsHistoryByUser(userServiceModel);
+        List<UserJobHistoryViewModel> userJobHistoryViewModels = jobHistoryServiceModels.stream()
+                .map(jh -> this.modelMapper.map(jh, UserJobHistoryViewModel.class))
+                .collect(Collectors.toList());
+
         modelAndView.addObject("userDetailsViewModel", userDetailsViewModel);
+        modelAndView.addObject("userJobHistoryViewModels", userJobHistoryViewModels);
         return super.view("user/details",  modelAndView);
+    }
+
+    @GetMapping("/profile")
+    public ModelAndView profile(@AuthenticationPrincipal User user) {
+        return super.redirect("/user/details/" + user.getFacultyNumber());
+    }
+
+    @GetMapping("/list")
+    public ModelAndView list(ModelAndView modelAndView) {
+        List<UserServiceModel> usersServiceModel = this.userService.getAllUsers();
+        List<UserListViewModel> usersViewModel = usersServiceModel.stream()
+                .map(u -> this.modelMapper.map(u, UserListViewModel.class))
+                .collect(Collectors.toList());
+
+        modelAndView.addObject("usersViewModel", usersViewModel);
+        return super.view("user/list", modelAndView);
     }
 
     private List<SpecialtyRegisterViewModel> getSpecialties() {

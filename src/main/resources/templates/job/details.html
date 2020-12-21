@@ -19,6 +19,7 @@
              sec:authorize="!hasAuthority('ADMIN')"
              th:if="${userStatus.name != 'Applied' && userStatus.name != 'Accepted'}">
             <form class="form" th:action="@{/job/{recordId}/status/Applied(recordId=*{recordId})}" th:method="POST">
+                <input type="hidden" name="redirectUrl" th:value="${'/job/details/' + jobModelView.recordId}">
                 <button type="submit" class="btn btn-primary">Apply for</button>
             </form>
         </div>
@@ -26,6 +27,7 @@
              sec:authorize="!hasAuthority('ADMIN')"
              th:if="${userStatus.name == 'Applied' && lastUserJobId == jobModelView.recordId}">
             <form class="form" th:action="@{/job/{recordId}/status/Surrendered(recordId=*{recordId})}" th:method="POST">
+                <input type="hidden" name="redirectUrl" th:value="${'/job/details/' + jobModelView.recordId}">
                 <button type="submit" class="btn btn-danger">Surrender</button>
             </form>
         </div>

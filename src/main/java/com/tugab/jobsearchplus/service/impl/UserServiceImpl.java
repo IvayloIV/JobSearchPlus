@@ -14,7 +14,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -62,6 +64,15 @@ public class UserServiceImpl implements UserService {
     public UserServiceModel getUserByFacultyNumber(String facultyNumber) {
         Optional<User> user = this.userRepository.findByFacultyNumber(facultyNumber);
         return user.map(u -> this.modelMapper.map(u, UserServiceModel.class)).orElse(null);
+    }
+
+    @Override
+    public List<UserServiceModel> getAllUsers() {
+        return this.userRepository.findAll()
+                .stream()
+                .filter(u -> u.getRoles().stream().anyMatch(r -> r.getAuthority().equals("USER")))
+                .map(u -> this.modelMapper.map(u, UserServiceModel.class))
+                .collect(Collectors.toList());
     }
 
     @Override
