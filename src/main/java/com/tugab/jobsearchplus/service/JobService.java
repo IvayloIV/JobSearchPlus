@@ -18,4 +18,6 @@ public interface JobService {
     public List<JobHistoryServiceModel> getJobsHistoryByJob(JobServiceModel jobServiceModel);
 
     public List<JobHistoryServiceModel> getJobsHistoryByUser(UserServiceModel userServiceModel);
+
+    public List<JobStatusServiceModel> getJobsStatus();
 }

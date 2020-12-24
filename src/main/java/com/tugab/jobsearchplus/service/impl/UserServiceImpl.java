@@ -2,26 +2,28 @@ package com.tugab.jobsearchplus.service.impl;
 
 import com.tugab.jobsearchplus.domain.entities.User;
 import com.tugab.jobsearchplus.domain.models.services.UserServiceModel;
-import com.tugab.jobsearchplus.repository.RoleRepository;
 import com.tugab.jobsearchplus.repository.UserRepository;
 import com.tugab.jobsearchplus.service.RoleService;
 import com.tugab.jobsearchplus.service.UserService;
 import com.tugab.jobsearchplus.utils.FileUploader;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     private static final String PICTURE_PATH = "image/profile";
+    private static final Integer USERS_PER_PAGE = 2;//8
 
     private final UserRepository userRepository;
     private final RoleService roleService;
@@ -67,12 +69,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserServiceModel> getAllUsers() {
-        return this.userRepository.findAll()
-                .stream()
-                .filter(u -> u.getRoles().stream().anyMatch(r -> r.getAuthority().equals("USER")))
-                .map(u -> this.modelMapper.map(u, UserServiceModel.class))
-                .collect(Collectors.toList());
+    public Page<UserServiceModel> getUsers(Integer page, String name, String facultyNumber, Long jobStatusId, Long specialtyId) {
+        Sort sortUsers = Sort.by("facultyNumber").descending();
+        Pageable pageable = PageRequest.of(page - 1, USERS_PER_PAGE, sortUsers);
+
+        return this.userRepository
+                .findAll(name, facultyNumber, jobStatusId, specialtyId, pageable)
+                .map(u -> this.modelMapper.map(u, UserServiceModel.class));
     }
 
     @Override

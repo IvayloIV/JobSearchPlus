@@ -6,7 +6,7 @@ public class JobFilterViewModel {
 
     private Long totalPages;
 
-    private String jobName;
+    private String jobTitle;
 
     private String companyName;
 
@@ -28,12 +28,12 @@ public class JobFilterViewModel {
         this.totalPages = totalPages;
     }
 
-    public String getJobName() {
-        return jobName;
+    public String getJobTitle() {
+        return jobTitle;
     }
 
-    public void setJobName(String jobName) {
-        this.jobName = jobName;
+    public void setJobTitle(String jobTitle) {
+        this.jobTitle = jobTitle;
     }
 
     public String getCompanyName() {

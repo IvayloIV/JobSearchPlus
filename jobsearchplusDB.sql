@@ -69,10 +69,10 @@ CREATE TABLE JOBS_HISTORY (
   FOREIGN KEY (new_status_id) REFERENCES job_status(id)
 );
 
-INSERT INTO specialties (name, created_date) VALUES ('AIT', NOW());
-INSERT INTO specialties (name, created_date) VALUES ('KM', NOW());
-INSERT INTO specialties (name, created_date) VALUES ('OC', NOW());
-INSERT INTO specialties (name, created_date) VALUES ('KP', NOW());
+INSERT INTO specialties (name, created_date) VALUES ('КСТ', NOW());
+INSERT INTO specialties (name, created_date) VALUES ('КТТ', NOW());
+INSERT INTO specialties (name, created_date) VALUES ('АИУТ', NOW());
+INSERT INTO specialties (name, created_date) VALUES ('СКИ', NOW());
 commit;
 
 INSERT INTO JOBS_STATUS (name) VALUES('Unemployed');

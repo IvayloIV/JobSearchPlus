@@ -5,16 +5,14 @@ import com.tugab.jobsearchplus.domain.enums.StudyType;
 import com.tugab.jobsearchplus.domain.models.bindings.UserRegisterBindingModel;
 import com.tugab.jobsearchplus.domain.models.services.JobHistoryServiceModel;
 import com.tugab.jobsearchplus.domain.models.services.UserServiceModel;
-import com.tugab.jobsearchplus.domain.models.views.SpecialtyRegisterViewModel;
-import com.tugab.jobsearchplus.domain.models.views.UserListViewModel;
-import com.tugab.jobsearchplus.domain.models.views.UserDetailsViewModel;
-import com.tugab.jobsearchplus.domain.models.views.UserJobHistoryViewModel;
+import com.tugab.jobsearchplus.domain.models.views.*;
 import com.tugab.jobsearchplus.service.JobService;
 import com.tugab.jobsearchplus.service.RoleService;
 import com.tugab.jobsearchplus.service.SpecialtyService;
 import com.tugab.jobsearchplus.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -120,13 +118,38 @@ public class UserController extends BaseController {
     }
 
     @GetMapping("/list")
-    public ModelAndView list(ModelAndView modelAndView) {
-        List<UserServiceModel> usersServiceModel = this.userService.getAllUsers();
-        List<UserListViewModel> usersViewModel = usersServiceModel.stream()
+    public ModelAndView list(@RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
+                             @RequestParam(value = "name", required = false) String name,
+                             @RequestParam(value = "facultyNumber", required = false) String facultyNumber,
+                             @RequestParam(value = "jobStatusId", required = false) Long jobStatusId,
+                             @RequestParam(value = "specialtyId", required = false) Long specialtyId,
+                             ModelAndView modelAndView) {
+        Page<UserServiceModel> userServiceModelPage = this.userService.getUsers(page, name, facultyNumber, jobStatusId, specialtyId);
+        Integer totalPages = userServiceModelPage.getTotalPages();
+        List<UserListViewModel> usersViewModel = userServiceModelPage.getContent().stream()
                 .map(u -> this.modelMapper.map(u, UserListViewModel.class))
                 .collect(Collectors.toList());
 
+        List<JobStatusViewModel> jobStatusViewModels = this.jobService.getJobsStatus().stream()
+                .map(j -> this.modelMapper.map(j, JobStatusViewModel.class))
+                .collect(Collectors.toList());
+
+        List<SpecialtyViewModel> specialtyViewModels = this.specialtyService.findAll().stream()
+                .map(s -> this.modelMapper.map(s, SpecialtyViewModel.class))
+                .collect(Collectors.toList());
+
+        UserDetailsArgsViewModel userArgsViewModel = new UserDetailsArgsViewModel();
+        userArgsViewModel.setCurrentPage(page);
+        userArgsViewModel.setTotalPages(totalPages > 0 ? totalPages : 1);
+        userArgsViewModel.setName(name);
+        userArgsViewModel.setFacultyNumber(facultyNumber);
+        userArgsViewModel.setJobStatusViewModes(jobStatusViewModels);
+        userArgsViewModel.setJobStatusId(jobStatusId);
+        userArgsViewModel.setSpecialtyViewModels(specialtyViewModels);
+        userArgsViewModel.setSpecialtyId(specialtyId);
+
         modelAndView.addObject("usersViewModel", usersViewModel);
+        modelAndView.addObject("userArgsViewModel", userArgsViewModel);
         return super.view("user/list", modelAndView);
     }
 

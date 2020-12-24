@@ -1,9 +1,8 @@
 package com.tugab.jobsearchplus.service;
 
 import com.tugab.jobsearchplus.domain.models.services.UserServiceModel;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.userdetails.UserDetailsService;
-
-import java.util.List;
 
 public interface UserService extends UserDetailsService {
 
@@ -11,5 +10,5 @@ public interface UserService extends UserDetailsService {
 
     public UserServiceModel getUserByFacultyNumber(String facultyNumber);
 
-    public List<UserServiceModel> getAllUsers();
+    public Page<UserServiceModel> getUsers(Integer page, String name, String facultyNumber, Long jobStatusId, Long specialtyId);
 }

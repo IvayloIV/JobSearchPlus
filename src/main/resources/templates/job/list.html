@@ -2,16 +2,16 @@
     <div class="container" th:object="${jobFilterViewModel}">
         <form class="form row" th:action="@{/job/list}" th:method="GET">
             <div class="form-group col col-lg-3">
-                <input type="text" class="form-control" placeholder="Job name" name="jobName" th:value="*{jobName}">
+                <input type="text" class="form-control" th:placeholder="#{jobList.jobTitle}" name="jobTitle" th:value="*{jobTitle}">
             </div>
             <div class="form-group col col-lg-3">
-                <input type="text" class="form-control" placeholder="Company name" name="companyName" th:value="*{companyName}">
+                <input type="text" class="form-control" th:placeholder="#{jobList.companyName}" name="companyName" th:value="*{companyName}">
             </div>
             <div class="form-group col col-lg-3">
-                <input type="text" class="form-control" placeholder="Region" name="region" th:value="*{region}">
+                <input type="text" class="form-control" th:placeholder="#{jobList.region}" name="region" th:value="*{region}">
             </div>
             <div class="col col-lg-3">
-                <button type="submit" class="btn btn-dark" th:text="Search"></button>
+                <button type="submit" class="btn btn-dark" th:text="#{jobList.search}"></button>
             </div>
         </form>
         <div th:each="job: ${jobsViewModel}" th:object="${job}">
@@ -20,25 +20,26 @@
             <div th:text="*{companyName}"></div>
             <div th:text="*{#dates.format(updatedDate, 'dd.MM.yyyy HH:mm')}"></div>
             <a sec:authorize="isAuthenticated()"
-               th:href="@{/job/details/{id}(id=*{recordId})}">Details</a>
+               th:href="@{/job/details/{id}(id=*{recordId})}"
+               th:text="#{jobList.details}"></a>
         </div>
         <div class="my-3">
             <ul class="pagination">
                 <li class="page-item"
                     th:classappend="*{currentPage == 1} ? d-none: ''">
-                    <a class="page-link" th:href="@{/job/list(page=*{currentPage - 1},jobName=*{jobName},companyName=*{companyName},region=*{region})}">Previous</a>
+                    <a class="page-link" th:href="@{/job/list(page=*{currentPage - 1},jobTitle=*{jobTitle},companyName=*{companyName},region=*{region})}" th:text="#{jobList.previous}"></a>
                 </li>
                 <li th:each="i : *{#numbers.sequence(1, totalPages)}"
                     class="page-item"
                     th:classappend="${i == jobFilterViewModel.currentPage} ? active: ''">
                     <a class="page-link"
-                       th:href="@{/job/list(page=${i},jobName=*{jobName},companyName=*{companyName},region=*{region})}"
+                       th:href="@{/job/list(page=${i},jobTitle=*{jobTitle},companyName=*{companyName},region=*{region})}"
                        th:text="${i}">
                     </a>
                 </li>
                 <li class="page-item"
                     th:classappend="*{currentPage == totalPages} ? d-none: ''">
-                    <a class="page-link" th:href="@{/job/list(page=*{currentPage + 1},jobName=*{jobName},companyName=*{companyName},region=*{region})}">Next</a>
+                    <a class="page-link" th:href="@{/job/list(page=*{currentPage + 1},jobTitle=*{jobTitle},companyName=*{companyName},region=*{region})}" th:text="#{jobList.next}"></a>
                 </li>
             </ul>
         </div>

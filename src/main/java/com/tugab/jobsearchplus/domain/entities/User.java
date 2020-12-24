@@ -65,7 +65,7 @@ public class User implements UserDetails {
     @JoinTable(name = "users_roles",
         joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "faculty_number"),
         inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-    private List<Role> roles;
+    private List<Role> roles; //TODO can be create many to one?
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

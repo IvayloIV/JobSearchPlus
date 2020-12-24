@@ -58,7 +58,7 @@ public class JobServiceImpl implements JobService {
         Stream<JobServiceModel> jobsStream = this.getJobs().stream();
 
         if (jobName != null) {
-            jobsStream = this.addJobFilter(jobsStream, jobName, JobServiceModel::getTitle); //TODO: change title to jobName?
+            jobsStream = this.addJobFilter(jobsStream, jobName, JobServiceModel::getTitle);
         }
 
         if (companyName != null) {
@@ -157,6 +157,14 @@ public class JobServiceImpl implements JobService {
 
         return jobsHistory.stream()
                 .map(j -> this.modelMapper.map(j, JobHistoryServiceModel.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<JobStatusServiceModel> getJobsStatus() {
+        return this.jobStatusRepository.findAll()
+                .stream()
+                .map(js -> this.modelMapper.map(js, JobStatusServiceModel.class))
                 .collect(Collectors.toList());
     }
 

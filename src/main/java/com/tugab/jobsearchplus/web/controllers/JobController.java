@@ -41,11 +41,11 @@ public class JobController extends BaseController {
 
     @GetMapping("/list")
     public ModelAndView list(@RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
-                             @RequestParam(value = "jobName", required = false) String jobName,
+                             @RequestParam(value = "jobTitle", required = false) String jobTitle,
                              @RequestParam(value = "companyName", required = false) String companyName,
                              @RequestParam(value = "region", required = false) String region,
                              ModelAndView modelAndView) {//TODO: if string is passed in page
-        JobFilterServiceModel jobsServiceModel = this.jobService.getJobs(page, jobName, companyName, region);
+        JobFilterServiceModel jobsServiceModel = this.jobService.getJobs(page, jobTitle, companyName, region);
 
         List<JobListViewModel> jobsViewModel = jobsServiceModel.getJobServiceModels().stream()
                 .map(job -> this.modelMapper.map(job, JobListViewModel.class))
@@ -54,7 +54,7 @@ public class JobController extends BaseController {
         JobFilterViewModel jobFilterViewModel = new JobFilterViewModel();
         jobFilterViewModel.setCurrentPage(page);
         jobFilterViewModel.setTotalPages(jobsServiceModel.getPageCount());
-        jobFilterViewModel.setJobName(jobName);
+        jobFilterViewModel.setJobTitle(jobTitle);
         jobFilterViewModel.setCompanyName(companyName);
         jobFilterViewModel.setRegion(region);
 
