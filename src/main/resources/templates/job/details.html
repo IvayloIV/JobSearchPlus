@@ -17,18 +17,18 @@
         </th:block>
         <div class="row my-4"
              sec:authorize="!hasAuthority('ADMIN')"
-             th:if="${userStatus.name != 'Applied' && userStatus.name != 'Accepted'}">
+             th:if="${userStatus.name.positionName != 'Applied' && userStatus.name.positionName != 'Accepted'}">
             <form class="form" th:action="@{/job/{recordId}/status/Applied(recordId=*{recordId})}" th:method="POST">
                 <input type="hidden" name="redirectUrl" th:value="${'/job/details/' + jobModelView.recordId}">
-                <button type="submit" class="btn btn-primary">Apply for</button>
+                <button type="submit" class="btn btn-primary" th:text="#{jobDetails.applyFor}"></button>
             </form>
         </div>
         <div class="row my-4"
              sec:authorize="!hasAuthority('ADMIN')"
-             th:if="${userStatus.name == 'Applied' && lastUserJobId == jobModelView.recordId}">
+             th:if="${userStatus.name.positionName == 'Applied' && lastUserJobId == jobModelView.recordId}">
             <form class="form" th:action="@{/job/{recordId}/status/Surrendered(recordId=*{recordId})}" th:method="POST">
                 <input type="hidden" name="redirectUrl" th:value="${'/job/details/' + jobModelView.recordId}">
-                <button type="submit" class="btn btn-danger">Surrender</button>
+                <button type="submit" class="btn btn-danger" th:text="#{jobDetails.surrender}"></button>
             </form>
         </div>
         <div class="row">
@@ -38,12 +38,12 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th scope="col">Факултетен номер</th>
-                        <th scope="col">Име</th>
-                        <th scope="col">Специалност</th>
-                        <th scope="col">Успех</th>
-                        <th scope="col">Състояние</th>
-                        <th scope="col">Дата</th>
+                        <th scope="col" th:text="#{jobDetails.facultyNumber}"></th>
+                        <th scope="col" th:text="#{jobDetails.name}"></th>
+                        <th scope="col" th:text="#{jobDetails.specialtyName}"></th>
+                        <th scope="col" th:text="#{jobDetails.grade}"></th>
+                        <th scope="col" th:text="#{jobDetails.jobStatus}"></th>
+                        <th scope="col" th:text="#{jobDetails.date}"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -55,7 +55,7 @@
                         </td>
                         <td th:text="*{user.specialtyName}"></td>
                         <td th:text="*{user.grade}"></td>
-                        <td th:text="*{newStatusName}"></td>
+                        <td th:text="*{newStatusName.name}"></td>
                         <td th:text="*{#dates.format(createdDate, 'dd.MM.yyyy HH:mm')}"></td>
                     </tr>
                 </tbody>

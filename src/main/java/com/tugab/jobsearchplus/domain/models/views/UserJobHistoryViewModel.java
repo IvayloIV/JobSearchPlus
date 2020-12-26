@@ -1,5 +1,7 @@
 package com.tugab.jobsearchplus.domain.models.views;
 
+import com.tugab.jobsearchplus.domain.entities.JobStatus;
+
 import java.util.Date;
 
 public class UserJobHistoryViewModel {
@@ -8,7 +10,7 @@ public class UserJobHistoryViewModel {
 
     private String jobTitle;
 
-    private String newStatusName;
+    private JobStatus newStatusName;
 
     private Date createdDate;
 
@@ -28,11 +30,11 @@ public class UserJobHistoryViewModel {
         this.jobTitle = jobTitle;
     }
 
-    public String getNewStatusName() {
+    public JobStatus getNewStatusName() {
         return newStatusName;
     }
 
-    public void setNewStatusName(String newStatusName) {
+    public void setNewStatusName(JobStatus newStatusName) {
         this.newStatusName = newStatusName;
     }
 

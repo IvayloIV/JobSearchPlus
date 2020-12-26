@@ -1,9 +1,8 @@
 package com.tugab.jobsearchplus.domain.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import com.tugab.jobsearchplus.domain.enums.JobPosition;
+
+import javax.persistence.*;
 
 @Entity
 @Table(name = "jobs_status")
@@ -14,7 +13,8 @@ public class JobStatus {
     private Long id;
 
     @Column(name = "name")
-    private String name;
+    @Enumerated(EnumType.STRING)
+    private JobPosition name;
 
     public Long getId() {
         return id;
@@ -24,11 +24,11 @@ public class JobStatus {
         this.id = id;
     }
 
-    public String getName() {
+    public JobPosition getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(JobPosition name) {
         this.name = name;
     }
 }

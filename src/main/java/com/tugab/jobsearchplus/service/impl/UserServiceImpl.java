@@ -1,7 +1,10 @@
 package com.tugab.jobsearchplus.service.impl;
 
+import com.tugab.jobsearchplus.domain.entities.JobStatus;
 import com.tugab.jobsearchplus.domain.entities.User;
+import com.tugab.jobsearchplus.domain.enums.JobPosition;
 import com.tugab.jobsearchplus.domain.models.services.UserServiceModel;
+import com.tugab.jobsearchplus.repository.JobStatusRepository;
 import com.tugab.jobsearchplus.repository.UserRepository;
 import com.tugab.jobsearchplus.service.RoleService;
 import com.tugab.jobsearchplus.service.UserService;
@@ -27,6 +30,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final RoleService roleService;
+    private final JobStatusRepository jobStatusRepository;
     private final ModelMapper modelMapper;
     private final FileUploader fileUploader;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -35,11 +39,13 @@ public class UserServiceImpl implements UserService {
     public UserServiceImpl(ModelMapper modelMapper,
                            UserRepository userRepository,
                            RoleService roleService,
+                           JobStatusRepository jobStatusRepository,
                            FileUploader fileUploader,
                            BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.modelMapper = modelMapper;
         this.userRepository = userRepository;
         this.roleService = roleService;
+        this.jobStatusRepository = jobStatusRepository;
         this.fileUploader = fileUploader;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
@@ -53,6 +59,9 @@ public class UserServiceImpl implements UserService {
 
         User user = this.modelMapper.map(userServiceModel, User.class);
         user.setPictureName(pictureName);
+
+        Optional<JobStatus> jobStatus = this.jobStatusRepository.findByName(JobPosition.Unemployed);
+        user.setJobStatus(jobStatus.get());
 
         try {
             this.userRepository.save(user);

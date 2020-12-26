@@ -93,7 +93,7 @@
                 <option value="" th:text="#{registerUser.selectStudyType}"></option>
                 <option th:each="studyType: ${studyTypes}"
                         th:value="${studyType.name}"
-                        th:text="${studyType.name}"></option>
+                        th:text="${studyType.value}"></option>
             </select>
             <p class="text-danger"
                th:if="${#fields.hasErrors('studyType')}"

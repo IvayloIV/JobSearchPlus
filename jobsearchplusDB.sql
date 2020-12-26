@@ -8,7 +8,7 @@ CREATE TABLE specialties (
 	created_date DATE
 );
 
-CREATE TABLE JOBS_STATUS (
+CREATE TABLE jobs_status (
 	id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
 	name VARCHAR(254) NOT NULL
 );
@@ -28,15 +28,15 @@ CREATE TABLE users (
 	grade DECIMAL(3, 2) UNSIGNED,
 	job_status_id INT UNSIGNED NOT NULL,
 	FOREIGN KEY (specialty_id) REFERENCES specialties(id),
-	FOREIGN KEY (job_status_id) REFERENCES job_status(id)
+	FOREIGN KEY (job_status_id) REFERENCES jobs_status(id)
 );
 
-CREATE TABLE ROLES (
+CREATE TABLE roles (
 	id VARCHAR(63) PRIMARY KEY,
   authority VARCHAR(31) NOT NULL UNIQUE
 );
 
-CREATE TABLE USERS_ROLES (
+CREATE TABLE users_roles (
 	user_id CHAR(10) NOT NULL,
   role_id VARCHAR(63) NOT NULL,
   PRIMARY KEY (user_id, role_id),
@@ -44,7 +44,7 @@ CREATE TABLE USERS_ROLES (
   FOREIGN KEY (role_id) REFERENCES roles(id)
 );
 
-CREATE TABLE JOBS (
+CREATE TABLE jobs (
 	record_id INT UNSIGNED PRIMARY KEY,
 	title VARCHAR(511) NOT NULL,
   region VARCHAR(255) NOT NULL,
@@ -56,7 +56,7 @@ CREATE TABLE JOBS (
   expire_date DATETIME
 );
 
-CREATE TABLE JOBS_HISTORY (
+CREATE TABLE jobs_history (
 	id VARCHAR(254) PRIMARY KEY,
 	faculty_number CHAR(10) NOT NULL,
 	job_record_id INT UNSIGNED NOT NULL,
@@ -64,9 +64,9 @@ CREATE TABLE JOBS_HISTORY (
   new_status_id INT UNSIGNED NOT NULL,
   created_date DATETIME NOT NULL,
   FOREIGN KEY (faculty_number) REFERENCES users(faculty_number),
-  FOREIGN KEY (job_record_id) REFERENCES job(record_id),
-  FOREIGN KEY (old_status_id) REFERENCES job_status(id),
-  FOREIGN KEY (new_status_id) REFERENCES job_status(id)
+  FOREIGN KEY (job_record_id) REFERENCES jobs(record_id),
+  FOREIGN KEY (old_status_id) REFERENCES jobs_status(id),
+  FOREIGN KEY (new_status_id) REFERENCES jobs_status(id)
 );
 
 INSERT INTO specialties (name, created_date) VALUES ('КСТ', NOW());
@@ -75,10 +75,10 @@ INSERT INTO specialties (name, created_date) VALUES ('АИУТ', NOW());
 INSERT INTO specialties (name, created_date) VALUES ('СКИ', NOW());
 commit;
 
-INSERT INTO JOBS_STATUS (name) VALUES('Unemployed');
-INSERT INTO JOBS_STATUS (name) VALUES('Applied');
-INSERT INTO JOBS_STATUS (name) VALUES('Rejected');
-INSERT INTO JOBS_STATUS (name) VALUES('Accepted');
-INSERT INTO JOBS_STATUS (name) VALUES('Left');
-INSERT INTO JOBS_STATUS (name) VALUES('Surrendered');
+INSERT INTO jobs_status (name) VALUES('Unemployed');
+INSERT INTO jobs_status (name) VALUES('Applied');
+INSERT INTO jobs_status (name) VALUES('Rejected');
+INSERT INTO jobs_status (name) VALUES('Accepted');
+INSERT INTO jobs_status (name) VALUES('Left');
+INSERT INTO jobs_status (name) VALUES('Surrendered');
 commit;

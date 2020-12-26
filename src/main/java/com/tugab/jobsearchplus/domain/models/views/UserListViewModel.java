@@ -1,5 +1,7 @@
 package com.tugab.jobsearchplus.domain.models.views;
 
+import com.tugab.jobsearchplus.domain.enums.JobPosition;
+
 public class UserListViewModel {
 
     private String facultyNumber;
@@ -10,7 +12,7 @@ public class UserListViewModel {
 
     private String pictureName;
 
-    private String jobStatusName;
+    private JobPosition jobStatusName;
 
     public String getFacultyNumber() {
         return facultyNumber;
@@ -44,11 +46,11 @@ public class UserListViewModel {
         this.pictureName = pictureName;
     }
 
-    public String getJobStatusName() {
+    public JobPosition getJobStatusName() {
         return jobStatusName;
     }
 
-    public void setJobStatusName(String jobStatusName) {
+    public void setJobStatusName(JobPosition jobStatusName) {
         this.jobStatusName = jobStatusName;
     }
 }

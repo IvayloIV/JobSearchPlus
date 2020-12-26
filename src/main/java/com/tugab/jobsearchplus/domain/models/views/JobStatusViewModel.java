@@ -1,10 +1,12 @@
 package com.tugab.jobsearchplus.domain.models.views;
 
+import com.tugab.jobsearchplus.domain.enums.JobPosition;
+
 public class JobStatusViewModel {
 
     private Long id;
 
-    private String name;
+    private JobPosition name;
 
     public Long getId() {
         return id;
@@ -14,11 +16,11 @@ public class JobStatusViewModel {
         this.id = id;
     }
 
-    public String getName() {
+    public JobPosition getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(JobPosition name) {
         this.name = name;
     }
 }

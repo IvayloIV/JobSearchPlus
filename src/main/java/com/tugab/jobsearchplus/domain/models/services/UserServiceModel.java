@@ -1,6 +1,7 @@
 package com.tugab.jobsearchplus.domain.models.services;
 
 import com.tugab.jobsearchplus.domain.entities.JobHistory;
+import com.tugab.jobsearchplus.domain.enums.StudyType;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ public class UserServiceModel {
 
     private SpecialtyServiceModel specialty;
 
-    private String studyType;
+    private StudyType studyType;
 
     private Double grade;
 
@@ -116,11 +117,11 @@ public class UserServiceModel {
         this.specialty = specialty;
     }
 
-    public String getStudyType() {
+    public StudyType getStudyType() {
         return studyType;
     }
 
-    public void setStudyType(String studyType) {
+    public void setStudyType(StudyType studyType) {
         this.studyType = studyType;
     }
 

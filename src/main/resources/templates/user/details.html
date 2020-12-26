@@ -27,32 +27,36 @@
                                 <br />
                                 <span th:text="*{studyType}"></span>
                                 <br />
-                                <span th:text="*{jobStatusName}"></span>
+                                <span th:if="*{jobStatusName.positionName == 'Unemployed'}"
+                                      th:text="*{jobStatusName}"></span>
+                                <span th:if="*{jobStatusName.positionName != 'Unemployed'}">
+                                    <a th:href="@{/job/details/{recordId}(recordId=${lastUserJobId})}" th:text="*{jobStatusName}"></a>
+                                </span>
                             </p>
                             <div sec:authorize="hasAuthority('ADMIN')"
-                                 th:if="*{jobStatusName == 'Applied'}">
+                                 th:if="*{jobStatusName.positionName == 'Applied'}">
                                 <form class="form" th:action="@{/job/{recordId}/status/Rejected(recordId=${lastUserJobId})}" th:method="POST">
                                     <input type="hidden" name="facultyNumber" th:value="*{facultyNumber}">
                                     <input type="hidden" name="redirectUrl" th:value="${'/user/details/' + userDetailsViewModel.facultyNumber}">
-                                    <button type="submit" class="btn btn-danger">Reject</button>
+                                    <button type="submit" class="btn btn-danger" th:text="#{userDetails.reject}"></button>
                                 </form>
                                 <form class="form" th:action="@{/job/{recordId}/status/Accepted(recordId=${lastUserJobId})}" th:method="POST">
                                     <input type="hidden" name="facultyNumber" th:value="*{facultyNumber}">
                                     <input type="hidden" name="redirectUrl" th:value="${'/user/details/' + userDetailsViewModel.facultyNumber}">
-                                    <button type="submit" class="btn btn-success">Accept</button>
+                                    <button type="submit" class="btn btn-success" th:text="#{userDetails.accept}"></button>
                                 </form>
                             </div>
                             <div sec:authorize="!hasAuthority('ADMIN')">
-                                <th:block th:if="*{jobStatusName == 'Applied'}">
+                                <th:block th:if="*{jobStatusName.positionName == 'Applied'}">
                                     <form class="form" th:action="@{/job/{recordId}/status/Surrendered(recordId=${lastUserJobId})}" th:method="POST">
                                         <input type="hidden" name="redirectUrl" th:value="${'/user/details/' + userDetailsViewModel.facultyNumber}">
-                                        <button type="submit" class="btn btn-danger">Surrendered</button>
+                                        <button type="submit" class="btn btn-danger" th:text="#{userDetails.surrendered}"></button>
                                     </form>
                                 </th:block>
-                                <th:block th:if="*{jobStatusName == 'Accepted'}">
+                                <th:block th:if="*{jobStatusName.positionName == 'Accepted'}">
                                     <form class="form" th:action="@{/job/{recordId}/status/Left(recordId=${lastUserJobId})}" th:method="POST">
                                         <input type="hidden" name="redirectUrl" th:value="${'/user/details/' + userDetailsViewModel.facultyNumber}">
-                                        <button type="submit" class="btn btn-danger">Left</button>
+                                        <button type="submit" class="btn btn-danger" th:text="#{userDetails.left}"></button>
                                     </form>
                                 </th:block>
                             </div>
@@ -65,10 +69,10 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <th scope="col">Номер на работа</th>
-                    <th scope="col">Име на работа</th>
-                    <th scope="col">Статус</th>
-                    <th scope="col">Дата на промяна</th>
+                    <th scope="col" th:text="#{userDetails.jobRecordId}"></th>
+                    <th scope="col" th:text="#{userDetails.jobTitle}"></th>
+                    <th scope="col" th:text="#{userDetails.userStatus}"></th>
+                    <th scope="col" th:text="#{userDetails.modifiedDate}"></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -78,7 +82,7 @@
                            th:text="*{jobRecordId}"></a>
                     </th>
                     <td th:text="*{jobTitle}"></td>
-                    <td th:text="*{newStatusName}"></td>
+                    <td th:text="*{newStatusName.name}"></td>
                     <td th:text="*{#dates.format(createdDate, 'dd.MM.yyyy HH:mm')}"></td>
                 </tr>
                 </tbody>

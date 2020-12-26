@@ -1,5 +1,6 @@
 package com.tugab.jobsearchplus.domain.models.views;
 
+import com.tugab.jobsearchplus.domain.enums.JobPosition;
 import com.tugab.jobsearchplus.domain.enums.StudyType;
 
 public class UserDetailsViewModel {
@@ -26,7 +27,7 @@ public class UserDetailsViewModel {
 
     private String specialtyName;
 
-    private String jobStatusName;
+    private JobPosition jobStatusName;
 
     public String getFacultyNumber() {
         return facultyNumber;
@@ -116,11 +117,11 @@ public class UserDetailsViewModel {
         this.specialtyName = specialtyName;
     }
 
-    public String getJobStatusName() {
+    public JobPosition getJobStatusName() {
         return jobStatusName;
     }
 
-    public void setJobStatusName(String jobStatusName) {
+    public void setJobStatusName(JobPosition jobStatusName) {
         this.jobStatusName = jobStatusName;
     }
 

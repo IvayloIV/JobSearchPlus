@@ -1,15 +1,15 @@
-<th:block xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" th:fragment="userList">
+<th:block xmlns:th="http://www.thymeleaf.org" th:fragment="userList">
     <div class="container" th:object="${userArgsViewModel}">
         <form class="form row" th:action="@{/user/list}" th:method="GET">
             <div class="form-group col col-lg-2">
-                <input type="text" class="form-control" placeholder="Name" name="name" th:value="*{name}">
+                <input type="text" class="form-control" th:placeholder="#{userList.name}" name="name" th:value="*{name}">
             </div>
             <div class="form-group col col-lg-2">
-                <input type="text" class="form-control" placeholder="Faculty Number" name="facultyNumber" th:value="*{facultyNumber}">
+                <input type="text" class="form-control" th:placeholder="#{userList.facultyNumber}" name="facultyNumber" th:value="*{facultyNumber}">
             </div>
             <div class="form-group col col-lg-2">
                 <select id="studyType" name="specialtyId">
-                    <option value="">All specialty</option>
+                    <option value="" th:text="#{userList.allSpecialties}"></option>
                     <option th:each="specialty: *{specialtyViewModels}"
                             th:value="${specialty.id}"
                             th:text="${specialty.name}"
@@ -18,7 +18,7 @@
             </div>
             <div class="form-group col col-lg-2">
                 <select id="userStatus" name="jobStatusId">
-                    <option value="">All job status</option>
+                    <option value="" th:text="#{userList.allJobStatuses}"></option>
                     <option th:each="jobStatus: *{jobStatusViewModes}"
                             th:value="${jobStatus.id}"
                             th:text="${jobStatus.name}"
@@ -26,7 +26,7 @@
                 </select>
             </div>
             <div class="col col-lg-2">
-                <button type="submit" class="btn btn-dark" th:text="Search"></button>
+                <button type="submit" class="btn btn-dark" th:text="#{userList.search}"></button>
             </div>
         </form>
         <div class="card-deck">
@@ -49,7 +49,7 @@
             <ul class="pagination">
                 <li class="page-item"
                     th:classappend="*{currentPage == 1} ? d-none: ''">
-                    <a class="page-link" th:href="@{/user/list(page=*{currentPage - 1},name=*{name},facultyNumber=*{facultyNumber},jobStatusId=*{jobStatusId},specialtyId=*{specialtyId})}">Previous</a>
+                    <a class="page-link" th:href="@{/user/list(page=*{currentPage - 1},name=*{name},facultyNumber=*{facultyNumber},jobStatusId=*{jobStatusId},specialtyId=*{specialtyId})}" th:text="#{userList.previous}"></a>
                 </li>
                 <li th:each="i : *{#numbers.sequence(1, totalPages)}"
                     class="page-item"
@@ -61,7 +61,7 @@
                 </li>
                 <li class="page-item"
                     th:classappend="*{currentPage == totalPages} ? d-none: ''">
-                    <a class="page-link" th:href="@{/user/list(page=*{currentPage + 1},name=*{name},facultyNumber=*{facultyNumber},jobStatusId=*{jobStatusId},specialtyId=*{specialtyId})}">Next</a>
+                    <a class="page-link" th:href="@{/user/list(page=*{currentPage + 1},name=*{name},facultyNumber=*{facultyNumber},jobStatusId=*{jobStatusId},specialtyId=*{specialtyId})}" th:text="#{userList.next}"></a>
                 </li>
             </ul>
         </div>

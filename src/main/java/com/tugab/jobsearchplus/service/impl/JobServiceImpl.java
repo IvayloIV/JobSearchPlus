@@ -4,6 +4,7 @@ import com.tugab.jobsearchplus.domain.entities.Job;
 import com.tugab.jobsearchplus.domain.entities.JobHistory;
 import com.tugab.jobsearchplus.domain.entities.JobStatus;
 import com.tugab.jobsearchplus.domain.entities.User;
+import com.tugab.jobsearchplus.domain.enums.JobPosition;
 import com.tugab.jobsearchplus.domain.models.services.*;
 import com.tugab.jobsearchplus.repository.JobHistoryRepository;
 import com.tugab.jobsearchplus.repository.JobRepository;
@@ -111,7 +112,7 @@ public class JobServiceImpl implements JobService {
             this.jobRepository.save(job);
         }
 
-        JobStatus newJobStatus = this.jobStatusRepository.findByName(status)
+        JobStatus newJobStatus = this.jobStatusRepository.findByName(JobPosition.valueOf(status))
                 .orElseThrow(() -> new IllegalArgumentException("Job status does not exist!"));
 
         JobHistory jobHistory = new JobHistory();
