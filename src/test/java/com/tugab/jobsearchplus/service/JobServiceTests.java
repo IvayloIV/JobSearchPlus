@@ -81,10 +81,11 @@ public class JobServiceTests {
                 .map(j -> this.modelMapper.map(j, JobHistory.class))
                 .collect(Collectors.toList());
 
+        Assertions.assertEquals(expectedJobHistoryList.size(), actualJobHistoryList.size());
+
         JobPosition jobPosition1 = actualJobHistoryList.get(0).getNewStatus().getName();
         JobPosition jobPosition2 = actualJobHistoryList.get(1).getNewStatus().getName();
 
-        Assertions.assertEquals(expectedJobHistoryList.size(), actualJobHistoryList.size());
         Assertions.assertEquals(jobStatus1.getName(), jobPosition1);
         Assertions.assertEquals(jobStatus2.getName(), jobPosition2);
     }

@@ -2,6 +2,7 @@ package com.tugab.jobsearchplus.web.controllers;
 
 import com.tugab.jobsearchplus.domain.entities.JobStatus;
 import com.tugab.jobsearchplus.domain.entities.Specialty;
+import com.tugab.jobsearchplus.domain.entities.User;
 import com.tugab.jobsearchplus.domain.enums.JobPosition;
 import com.tugab.jobsearchplus.repository.JobStatusRepository;
 import com.tugab.jobsearchplus.repository.SpecialtyRepository;
@@ -19,6 +20,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import java.util.List;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -58,10 +61,11 @@ public class UserControllerTests {
         specialty.setName("KST");
         this.specialtyRepository.saveAndFlush(specialty);
 
+        String facultyNumber = "29304530";
         this.mockMvc
             .perform(
                 MockMvcRequestBuilders.post("/user/register")
-                    .param("facultyNumber", "29304530")
+                    .param("facultyNumber", facultyNumber)
                     .param("password", "1234")
                     .param("name", "Ivana")
                     .param("surname", "Ivanova")
@@ -76,5 +80,8 @@ public class UserControllerTests {
         Long expectedUserCount = 1L;
         Long actualUserCount = this.userRepository.count();
         Assertions.assertEquals(expectedUserCount, actualUserCount);
+
+        List<User> users = this.userRepository.findAll();
+        Assertions.assertEquals(facultyNumber, users.get(0).getFacultyNumber());
     }
 }
