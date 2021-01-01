@@ -1,14 +1,14 @@
 <th:block xmlns:th="http://www.thymeleaf.org" th:fragment="userList">
     <div class="container" th:object="${userArgsViewModel}">
         <form class="form row" th:action="@{/user/list}" th:method="GET">
-            <div class="form-group col col-lg-2">
+            <div class="form-group col col-lg-2 px-2">
                 <input type="text" class="form-control" th:placeholder="#{userList.name}" name="name" th:value="*{name}">
             </div>
-            <div class="form-group col col-lg-2">
+            <div class="form-group col col-lg-2 px-2">
                 <input type="text" class="form-control" th:placeholder="#{userList.facultyNumber}" name="facultyNumber" th:value="*{facultyNumber}">
             </div>
-            <div class="form-group col col-lg-2">
-                <select id="studyType" name="specialtyId">
+            <div class="form-group col col-lg-3 px-2">
+                <select class="form-control" id="studyType" name="specialtyId">
                     <option value="" th:text="#{userList.allSpecialties}"></option>
                     <option th:each="specialty: *{specialtyViewModels}"
                             th:value="${specialty.id}"
@@ -16,8 +16,8 @@
                             th:selected="${specialty.id == userArgsViewModel.specialtyId}"></option>
                 </select>
             </div>
-            <div class="form-group col col-lg-2">
-                <select id="userStatus" name="jobStatusId">
+            <div class="form-group col col-lg-3 px-2">
+                <select class="form-control" id="userStatus" name="jobStatusId">
                     <option value="" th:text="#{userList.allJobStatuses}"></option>
                     <option th:each="jobStatus: *{jobStatusViewModes}"
                             th:value="${jobStatus.id}"
@@ -29,20 +29,44 @@
                 <button type="submit" class="btn btn-dark" th:text="#{userList.search}"></button>
             </div>
         </form>
-        <div class="card-deck">
-            <div class="card" th:each="user: ${usersViewModel}" th:object="${user}">
-                <a th:href="@{/user/details/{facultyNumber}(facultyNumber=*{facultyNumber})}">
-                    <h4 class="mx-auto my-2" th:text="*{name + ' ' + surname}"></h4>
-                    <img class="card-img-top"
-                         th:src="@{/image/profile/{picture}(picture=*{pictureName})}"
-                         th:alt="*{pictureName}"
-                         th:width="250px"
-                         th:height="180px">
-                    <div class="card-body">
-                        <p class="card-text" th:text="*{facultyNumber}"></p>
-                        <p class="card-text" th:text="*{jobStatusName}"></p>
+        <!--<div class="card-deck">-->
+            <!--<div class="card" th:each="user: ${usersViewModel}" th:object="${user}">-->
+                <!--<a th:href="@{/user/details/{facultyNumber}(facultyNumber=*{facultyNumber})}">-->
+                    <!--<h4 class="mx-auto my-2" th:text="*{name + ' ' + surname}"></h4>-->
+                    <!--<img class="card-img-top"-->
+                         <!--th:src="@{/image/profile/{picture}(picture=*{pictureName})}"-->
+                         <!--th:alt="*{pictureName}"-->
+                         <!--th:width="250px"-->
+                         <!--th:height="180px">-->
+                    <!--<div class="card-body">-->
+                        <!--<p class="card-text" th:text="*{facultyNumber}"></p>-->
+                        <!--<p class="card-text" th:text="*{jobStatusName}"></p>-->
+                    <!--</div>-->
+                <!--</a>-->
+            <!--</div>-->
+        <!--</div>-->
+        <div th:each="user: ${usersViewModel}" th:object="${user}">
+            <div class="card mb-3" style="width: 287px;">
+                <div class="row g-0">
+                    <div class="d-flex flex-row col-md-6 justify-content-stretch pr-1">
+                        <img th:src="@{/image/profile/{picture}(picture=*{pictureName})}"
+                             th:alt="*{pictureName}"
+
+                             class="img-fluid"/>
                     </div>
-                </a>
+                    <div class="col-md-6 pl-3">
+                        <div class="card-body pl-1">
+                            <h5 class="card-title" th:text="*{name + ' ' + surname}"></h5>
+                            <p class="card-text" th:text="*{facultyNumber}">
+                                This is a wider card with supporting text below as a natural lead-in to
+                                additional content. This content is a little bit longer.
+                            </p>
+                            <p class="card-text">
+                                <small class="text-muted" th:text="*{jobStatusName}"></small>
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="my-3">
