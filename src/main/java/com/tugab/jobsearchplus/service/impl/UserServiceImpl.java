@@ -26,7 +26,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private static final String PICTURE_PATH = "image/profile";
-    private static final Integer USERS_PER_PAGE = 2;//8
+    private static final Integer USERS_PER_PAGE = 6;//8
 
     private final UserRepository userRepository;
     private final RoleService roleService;
