@@ -1,65 +1,92 @@
 <th:block xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" th:fragment="userDetails">
     <div class="container">
-        <div class="row" th:object="${userDetailsViewModel}">
-            <div class="col-xs-12 col-sm-6 col-md-6">
-                <div class="well well-sm">
-                    <div class="row">
-                        <div class="col-sm-6 col-md-4">
-                            <img th:src="@{/image/profile/{picture}(picture=*{pictureName})}"
-                                 th:alt="*{pictureName}"
-                                 th:width="116px"
-                                 th:height="127px"
-                                 class="img-rounded img-responsive"/>
+        <div class="card my-5 mx-auto" style="width:650px;" th:object="${userDetailsViewModel}">
+            <div class="row g-0">
+                <div class="d-flex flex-row col-md-5 justify-content-stretch pr-1">
+                    <img th:src="@{/image/profile/{picture}(picture=*{pictureName})}"
+                         th:alt="*{pictureName}"
+                         class="img-fluid"/>
+                </div>
+                <div class="col-md-7 pl-3">
+                    <div class="card-body pl-1">
+                        <h4 class="card-title text-primary text-center" th:text="*{fullName}"></h4>
+                        <div class="card-text">
+                            <span class="font-weight-bold" th:text="#{userDetails.facultyNumber}"></span>
+                            <span th:text="*{facultyNumber}"></span>
                         </div>
-                        <div class="col-sm-6 col-md-8">
-                            <h4 th:text="*{fullName}"></h4>
-                            <small th:text="*{facultyNumber + ', ' + egn}"></small>
-                            <p>
-                                <i class="glyphicon glyphicon-envelope"></i>
-                                <span th:text="*{email}"></span>
-                                <br />
-                                <i class="glyphicon glyphicon-globe"></i>
-                                <span th:text="*{phone}"></span>
-                                <br />
-                                <span th:text="*{grade}"></span>
-                                <br />
-                                <span th:text="*{specialtyName}"></span>
-                                <br />
-                                <span th:text="*{studyType}"></span>
-                                <br />
-                                <span th:if="*{jobStatusName.positionName == 'Unemployed'}"
-                                      th:text="*{jobStatusName}"></span>
-                                <span th:if="*{jobStatusName.positionName != 'Unemployed'}">
-                                    <a th:href="@{/job/details/{recordId}(recordId=${lastUserJobId})}" th:text="*{jobStatusName}"></a>
-                                </span>
-                            </p>
-                            <div sec:authorize="hasAuthority('ADMIN')"
-                                 th:if="*{jobStatusName.positionName == 'Applied'}">
-                                <form class="form" th:action="@{/job/{recordId}/status/Rejected(recordId=${lastUserJobId})}" th:method="POST">
-                                    <input type="hidden" name="facultyNumber" th:value="*{facultyNumber}">
+                        <hr class="hr-2 bg-dark w-100 my-0 ml-0 border-primary">
+                        <div class="card-text">
+                            <span class="font-weight-bold" th:text="#{userDetails.egn}"></span>
+                            <span th:text="*{egn}"></span>
+                        </div>
+                        <hr class="hr-2 bg-dark w-100 my-0 ml-0 border-primary">
+                        <div class="card-text">
+                            <span class="font-weight-bold" th:text="#{userDetails.email}"></span>
+                            <span th:text="*{email}"></span>
+                        </div>
+                        <hr class="hr-2 bg-dark w-100 my-0 ml-0 border-primary">
+                        <div class="card-text">
+                            <span class="font-weight-bold" th:text="#{userDetails.phone}"></span>
+                            <span th:text="*{phone}"></span>
+                        </div>
+                        <hr class="hr-2 bg-dark w-100 my-0 ml-0 border-primary">
+                        <div class="card-text">
+                            <span class="font-weight-bold" th:text="#{userDetails.grade}"></span>
+                            <span th:text="*{grade}"></span>
+                        </div>
+                        <hr class="hr-2 bg-dark w-100 my-0 ml-0 border-primary">
+                        <div class="card-text">
+                            <span class="font-weight-bold" th:text="#{userDetails.egn}"></span>
+                            <span th:text="*{egn}"></span>
+                        </div>
+                        <hr class="hr-2 bg-dark w-100 my-0 ml-0 border-primary">
+                        <div class="card-text">
+                            <span class="font-weight-bold" th:text="#{userDetails.specialtyName}"></span>
+                            <span th:text="*{specialtyName}"></span>
+                        </div>
+                        <hr class="hr-2 bg-dark w-100 my-0 ml-0 border-primary">
+                        <div class="card-text">
+                            <span class="font-weight-bold" th:text="#{userDetails.studyType}"></span>
+                            <span th:text="*{studyType}"></span>
+                        </div>
+                        <hr class="hr-2 bg-dark w-100 my-0 ml-0 border-primary">
+                        <div class="card-text">
+                            <span class="font-weight-bold" th:text="#{userDetails.jobStatus}"></span>
+                            <span th:if="*{jobStatusName.positionName == 'Unemployed'}"
+                                  th:text="*{jobStatusName}"></span>
+                            <span th:if="*{jobStatusName.positionName != 'Unemployed'}">
+                                <a th:href="@{/job/details/{recordId}(recordId=${lastUserJobId})}" th:text="*{jobStatusName}"></a>
+                            </span>
+                        </div>
+                        <hr class="hr-2 bg-dark w-100 my-0 ml-0 border-primary">
+                        <div sec:authorize="hasAuthority('ADMIN')"
+                             th:if="*{jobStatusName.positionName == 'Applied'}"
+                             class="d-flex flex-row justify-content-center mt-3">
+                            <form class="form mx-2" th:action="@{/job/{recordId}/status/Rejected(recordId=${lastUserJobId})}" th:method="POST">
+                                <input type="hidden" name="facultyNumber" th:value="*{facultyNumber}">
+                                <input type="hidden" name="redirectUrl" th:value="${'/user/details/' + userDetailsViewModel.facultyNumber}">
+                                <button type="submit" class="btn btn-danger" th:text="#{userDetails.reject}"></button>
+                            </form>
+                            <form class="form mx-2" th:action="@{/job/{recordId}/status/Accepted(recordId=${lastUserJobId})}" th:method="POST">
+                                <input type="hidden" name="facultyNumber" th:value="*{facultyNumber}">
+                                <input type="hidden" name="redirectUrl" th:value="${'/user/details/' + userDetailsViewModel.facultyNumber}">
+                                <button type="submit" class="btn btn-success" th:text="#{userDetails.accept}"></button>
+                            </form>
+                        </div>
+                        <div sec:authorize="!hasAuthority('ADMIN')"
+                             class="text-center mt-3">
+                            <th:block th:if="*{jobStatusName.positionName == 'Applied'}">
+                                <form class="form" th:action="@{/job/{recordId}/status/Surrendered(recordId=${lastUserJobId})}" th:method="POST">
                                     <input type="hidden" name="redirectUrl" th:value="${'/user/details/' + userDetailsViewModel.facultyNumber}">
-                                    <button type="submit" class="btn btn-danger" th:text="#{userDetails.reject}"></button>
+                                    <button type="submit" class="btn btn-danger" th:text="#{userDetails.surrendered}"></button>
                                 </form>
-                                <form class="form" th:action="@{/job/{recordId}/status/Accepted(recordId=${lastUserJobId})}" th:method="POST">
-                                    <input type="hidden" name="facultyNumber" th:value="*{facultyNumber}">
+                            </th:block>
+                            <th:block th:if="*{jobStatusName.positionName == 'Accepted'}">
+                                <form class="form" th:action="@{/job/{recordId}/status/Left(recordId=${lastUserJobId})}" th:method="POST">
                                     <input type="hidden" name="redirectUrl" th:value="${'/user/details/' + userDetailsViewModel.facultyNumber}">
-                                    <button type="submit" class="btn btn-success" th:text="#{userDetails.accept}"></button>
+                                    <button type="submit" class="btn btn-danger" th:text="#{userDetails.left}"></button>
                                 </form>
-                            </div>
-                            <div sec:authorize="!hasAuthority('ADMIN')">
-                                <th:block th:if="*{jobStatusName.positionName == 'Applied'}">
-                                    <form class="form" th:action="@{/job/{recordId}/status/Surrendered(recordId=${lastUserJobId})}" th:method="POST">
-                                        <input type="hidden" name="redirectUrl" th:value="${'/user/details/' + userDetailsViewModel.facultyNumber}">
-                                        <button type="submit" class="btn btn-danger" th:text="#{userDetails.surrendered}"></button>
-                                    </form>
-                                </th:block>
-                                <th:block th:if="*{jobStatusName.positionName == 'Accepted'}">
-                                    <form class="form" th:action="@{/job/{recordId}/status/Left(recordId=${lastUserJobId})}" th:method="POST">
-                                        <input type="hidden" name="redirectUrl" th:value="${'/user/details/' + userDetailsViewModel.facultyNumber}">
-                                        <button type="submit" class="btn btn-danger" th:text="#{userDetails.left}"></button>
-                                    </form>
-                                </th:block>
-                            </div>
+                            </th:block>
                         </div>
                     </div>
                 </div>

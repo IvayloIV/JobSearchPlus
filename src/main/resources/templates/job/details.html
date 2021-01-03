@@ -1,40 +1,59 @@
 <th:block xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
           th:fragment="jobDetails">
     <div class="container" th:object="${jobModelView}">
-        <h3 th:text="*{title}"></h3>
-        <div class="row">
-            <div class="col col-lg-2" th:text="*{region}"></div>
-            <div class="col col-lg-2" th:text="*{#dates.format(updatedDate, 'dd.MM.yyyy HH:mm')}"></div>
-            <div class="col col-lg-2" th:text="*{#dates.format(expireDate, 'dd.MM.yyyy HH:mm')}"></div>
-            <div class="col col-lg-2" th:text="*{salary}"></div>
+        <div class="border border-primary rounded py-3 px-4">
+            <h2 class="text-center" th:text="*{title}"></h2>
+            <hr class="hr-2 bg-dark w-75 mb-2 border-primary">
+            <div class="d-flex flex-row justify-content-center">
+                <div class="px-3 border-right border-primary">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span th:text="*{region}"></span>
+                </div>
+                <div class="px-3">
+                    <i class="fas fa-clock"></i>
+                    <span th:text="*{#dates.format(updatedDate, 'dd.MM.yyyy HH:mm')}"></span>
+                </div>
+                <div class="px-3 border-left border-primary">
+                    <i class="fas fa-history"></i>
+                    <span th:text="*{#dates.format(expireDate, 'dd.MM.yyyy HH:mm')}"></span>
+                </div>
+                <div class="px-3 border-left border-primary"
+                     th:if="*{salary != null && salary.length != 0}">
+                    <i class="fas fa-dollar-sign"></i>
+                    <span th:text="*{salary}"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col col-lg-2" >
+                    <i class="fas fa-building"></i>
+                    <span th:text="*{companyName}"></span>
+                </div>
+                <div class="col col-lg-10">
+                    <i class="fas fa-briefcase"></i>
+                    <span th:text="*{jobCategory}"></span>
+                </div>
+            </div>
+            <div class="row my-4"
+                 sec:authorize="!hasAuthority('ADMIN')"
+                 th:if="${userStatus.name.positionName != 'Applied' && userStatus.name.positionName != 'Accepted'}">
+                <form class="form" th:action="@{/job/{recordId}/status/Applied(recordId=*{recordId})}" th:method="POST">
+                    <input type="hidden" name="redirectUrl" th:value="${'/job/details/' + jobModelView.recordId}">
+                    <button type="submit" class="btn btn-primary" th:text="#{jobDetails.applyFor}"></button>
+                </form>
+            </div>
+            <div class="row my-4"
+                 sec:authorize="!hasAuthority('ADMIN')"
+                 th:if="${userStatus.name.positionName == 'Applied' && lastUserJobId == jobModelView.recordId}">
+                <form class="form" th:action="@{/job/{recordId}/status/Surrendered(recordId=*{recordId})}" th:method="POST">
+                    <input type="hidden" name="redirectUrl" th:value="${'/job/details/' + jobModelView.recordId}">
+                    <button type="submit" class="btn btn-danger" th:text="#{jobDetails.surrender}"></button>
+                </form>
+            </div>
+            <div class="row px-3">
+                <p th:utext="*{description}"></p>
+            </div>
         </div>
-        <div class="row">
-            <div class="col col-lg-2" th:text="*{companyName}"></div>
-            <div class="col col-lg-10" th:text="*{jobCategory}"></div>
-        </div>
-        <th:block>
-
-        </th:block>
-        <div class="row my-4"
-             sec:authorize="!hasAuthority('ADMIN')"
-             th:if="${userStatus.name.positionName != 'Applied' && userStatus.name.positionName != 'Accepted'}">
-            <form class="form" th:action="@{/job/{recordId}/status/Applied(recordId=*{recordId})}" th:method="POST">
-                <input type="hidden" name="redirectUrl" th:value="${'/job/details/' + jobModelView.recordId}">
-                <button type="submit" class="btn btn-primary" th:text="#{jobDetails.applyFor}"></button>
-            </form>
-        </div>
-        <div class="row my-4"
-             sec:authorize="!hasAuthority('ADMIN')"
-             th:if="${userStatus.name.positionName == 'Applied' && lastUserJobId == jobModelView.recordId}">
-            <form class="form" th:action="@{/job/{recordId}/status/Surrendered(recordId=*{recordId})}" th:method="POST">
-                <input type="hidden" name="redirectUrl" th:value="${'/job/details/' + jobModelView.recordId}">
-                <button type="submit" class="btn btn-danger" th:text="#{jobDetails.surrender}"></button>
-            </form>
-        </div>
-        <div class="row">
-            <p th:utext="*{description}"></p>
-        </div>
-        <div class="row" sec:authorize="hasAuthority('ADMIN')">
+        <div class="row px-3" sec:authorize="hasAuthority('ADMIN')">
             <table class="table">
                 <thead>
                     <tr>
