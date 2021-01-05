@@ -1,18 +1,22 @@
 <th:block xmlns:th="http://www.thymeleaf.org" th:fragment="register">
-    <h1 class="text-center text-dark" th:text="#{loginUser.login}"></h1>
-    <hr class="hr-2 bg-dark w-25">
+    <hr class="hr-2 bg-dark w-50 mt-5 rounded-circle border-primary">
+    <h1 class="text-center text-dark pb-2 font-italic" th:text="#{loginUser.login}"></h1>
     <form class="form w-25 mx-auto" th:action="@{/user/login}" th:method="POST">
         <div class="form-group">
-            <label for="facultyNumber" class="font-weight-bold" th:text="#{loginUser.facultyNumber}"></label>
-            <input type="text" class="form-control" id="facultyNumber" name="facultyNumber">
+            <input type="text"
+                   class="form-control"
+                   name="facultyNumber"
+                   th:placeholder="#{loginUser.facultyNumber}">
         </div>
         <div class="form-group">
-            <label for="password" class="font-weight-bold" th:text="#{loginUser.password}"></label>
-            <input type="password" class="form-control" id="password" name="password">
+            <input type="password"
+                   class="form-control"
+                   name="password"
+                   th:placeholder="#{loginUser.password}">
         </div>
-        <hr class="hr-2 bg-dark">
-        <div class="button-holder d-flex justify-content-center">
-            <button type="submit" class="btn btn-dark" th:text="#{loginUser.login}"></button>
+        <div class="button-holder d-flex justify-content-center mt-3">
+            <button type="submit" class="btn btn-primary" th:text="#{loginUser.login}"></button>
         </div>
     </form>
+    <hr class="hr-2 bg-dark w-50 mb-5 rounded-circle border-primary">
 </th:block>
